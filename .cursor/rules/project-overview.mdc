@@ -13,7 +13,7 @@ This is a monorepo project built with **Feature-Sliced Design (FSD)** architectu
 
 - **Framework**: ReactJs 19.2.6
 - **Language**: TypeScript 6.0.2
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS 4.3.0
 - **Package Manager**: npm 11.6.1
 
 ### Technology Stack for "mobile" application

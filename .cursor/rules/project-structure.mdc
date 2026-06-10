@@ -104,28 +104,23 @@ npm run test                   # Unit testing
 
 ## Dependencies
 
-### Core Dependencies
+### Core Dependencies for "web" application
 
 ```json
 {
-  "next": "latest", // Next.js 15
-  "react": "^19.1.0", // React 19
-  "typescript": "^5.8.3", // TypeScript
-  "tailwindcss": "^3.4.1", // Tailwind CSS
-  "axios": "^1.12.2" // HTTP client
+  "react": "^19.2.6", // React 19
+  "typescript": "^6.0.2", // TypeScript
+  "tailwindcss": "^4.3.0" // Tailwind CSS
 }
 ```
 
-### Development Dependencies
+### Development Dependencies for "web" application
 
 ```json
 {
-  "eslint": "^9.38.0", // ESLint
-  "prettier": "^3.5.3", // Prettier
-  "@conarti/eslint-plugin-feature-sliced": "^1.0.5", // FSD linting
-  "typescript-eslint": "^8.46.2", // TypeScript ESLint
-  "husky": "^9.1.7", // Git hooks
-  "lint-staged": "^15.5.2" // Pre-commit linting
+  "eslint": "^10.3.0", // ESLint
+  "typescript-eslint": "^8.59.2", // TypeScript ESLint
+  "vite": "^8.0.12" // Vite
 }
 ```
 

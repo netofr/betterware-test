@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { formatGreeting } from 'shared'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { formatGreeting } from "shared";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
@@ -18,7 +18,7 @@ function App() {
         </div>
         <div>
           <h1>Get started</h1>
-          <p>{formatGreeting('Betterware')}</p>
+          <p>{formatGreeting("Betterware")}</p>
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
@@ -116,9 +116,15 @@ function App() {
       </section>
 
       <div className="ticks"></div>
-      <section id="spacer"></section>
+      <section id="spacer">
+        <div className="flex items-center justify-center h-32 bg-slate-100">
+          <h1 className="text-3xl font-bold text-blue-400 underline">
+            Tailwind CSS works!
+          </h1>
+        </div>
+      </section>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
