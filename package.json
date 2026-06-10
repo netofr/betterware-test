@@ -4,7 +4,17 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
+  "scripts": {
+    "build": "lerna run build",
+    "build:shared": "npm run build --workspace=shared",
+    "web": "npm run dev --workspace=web",
+    "start:mobile": "npm run start --workspace=mobile",
+    "ios": "npm run ios --workspace=mobile",
+    "android": "npm run android --workspace=mobile",
+    "lint": "lerna run lint",
+    "test": "lerna run test",
+    "postinstall": "npm run build --workspace=shared"
+  },
   "devDependencies": {
     "lerna": "^9.0.7"
   }

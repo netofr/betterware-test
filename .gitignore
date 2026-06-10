@@ -1,1 +1,17 @@
 node_modules/
+dist/
+.DS_Store
+*.log
+.env
+.env.*
+
+# React Native
+packages/mobile/ios/Pods/
+packages/mobile/ios/build/
+packages/mobile/android/.gradle/
+packages/mobile/android/app/build/
+packages/mobile/android/build/
+packages/mobile/.metro-health-check*
+
+# Vite
+packages/web/dist/
