@@ -1,0 +1,218 @@
+---
+alwaysApply: true
+description: Complete project overview and quick reference
+---
+
+# Betterware Monorepo Project - Complete Overview
+
+This is a monorepo project built with **Feature-Sliced Design (FSD)** architecture for Betterware Mini e-commerce.
+
+## 🏗️ Architecture Summary
+
+### Technology Stack for "web" application
+
+- **Framework**: ReactJs 19.2.6
+- **Language**: TypeScript 6.0.2
+- **Styling**: Tailwind CSS
+- **Package Manager**: npm 11.6.1
+
+### Technology Stack for "mobile" application
+
+- **Framework**: React Native 0.86.0 with ReactJs 19.2.3
+- **Language**: TypeScript 5.8.3
+- **Styling**: Styled Components
+- **Package Manager**: npm 11.6.1
+
+### Core Architecture Pattern
+
+**Feature-Sliced Design (FSD)** with strict layer hierarchy:
+
+```
+app ↑ pages ↑ widgets ↑ features ↑ entities ↑ shared
+```
+
+## 📁 Project Structure
+
+### Architectural Architecture for "web" application
+
+```
+src/
+├── app/               # Application initialization (providers, global styles, router)
+├── pages/             # Page components mapping to application routes
+├── widgets/           # Autonomous, composite UI blocks (e.g., Header, Sidebar)
+├── features/          # User actions with business value (e.g., AddToCart, LoginByEmail)
+├── entities/          # Business concepts and data models (e.g., User, Product, Order)
+└── shared/            # Reusable infrastructure (UI kit, API clients, helpers)
+```
+
+### Architectural Architecture for "mobile" application
+
+```
+src/
+├── app/          # App initialization: providers, global styles, global navigation root
+├── pages/        # High-level screens or navigation entry points
+├── widgets/      # Self-contained layout combinations (e.g., Feed, Header)
+├── features/     # User actions bringing business value (e.g., AddToCart)
+├── entities/     # Business domains, data structures, and states (e.g., User, Product)
+└── shared/       # Cross-cutting, zero-dependency tools (e.g., UI primitives, theme, API clients)
+```
+
+### Standard Directory Setup for both "web" and "mobile" applications
+
+```
+src/entities/product/
+├── ui/
+│   ├── ProductCard.tsx       # Presentation logic
+│   └── ProductRow.tsx
+├── model/
+│   ├── slice.ts              # Redux/Zustand state management
+│   └── selectors.ts          # State selectors
+├── api/
+│   └── getProductById.ts     # Fetching logic
+└── index.ts                  # Public API: export { ProductCard } from './ui/ProductCard'
+```
+
+## 🎨 Styling & UI
+
+**Design System for "web" application**:
+
+- **Styling**: Tailwind CSS
+
+**Design System for "mobile" application**:
+
+- **Styling**: styled-components
+
+**Key Features**:
+
+- Responsive design with custom breakpoints
+- CSS custom properties for theming
+- Component variants with class-variance-authority
+
+## 🛠️ Development Workflow
+
+### Code Quality Tools
+
+- **ESLint**: TypeScript + FSD + React rules
+- **Prettier**: Consistent code formatting
+- **Husky**: Pre-commit hooks with lint-staged
+- **TypeScript**: Strict type checking
+
+### Available Scripts
+
+**`build`**
+
+lerna run build
+
+Runs the `build` script in every package that defines one:
+
+- `shared` → `tsc` (compiles TypeScript into `packages/shared/dist/`)
+- `web` → `tsc -b && vite build` (type-check + production bundle)
+- `mobile` → no `build` script, so Lerna skips it
+
+Use this when you want a full build of all buildable packages.
+
+**`build:shared`**
+
+npm run build --workspace=shared
+
+Builds only the `shared` workspace. Same as running `tsc` inside `packages/shared`.
+
+Useful when you changed shared code and want to recompile it without building web or mobile.
+
+**`web`**
+
+npm run dev --workspace=web
+
+Starts the Vite dev server for the web app (`packages/web`). That gives you hot reload during web development.
+
+**`start:mobile`**
+
+npm run start --workspace=mobile
+
+Starts the Metro bundler (`react-native start`) for the React Native app. This serves JS to the app but does not launch a simulator by itself.
+
+Usually you run this in one terminal, then run `ios` or `android` in another.
+
+**`ios`**
+
+npm run ios --workspace=mobile
+
+Builds and runs the iOS app via `react-native run-ios` (simulator or connected device).
+
+Requires Xcode and iOS tooling on macOS.
+
+**`android`**
+
+npm run android --workspace=mobile
+
+Builds and runs the Android app via `react-native run-android` (emulator or connected device).
+
+Requires Android SDK / emulator setup.
+
+**`lint`**
+
+lerna run lint
+
+Runs `lint` in every package that has it:
+
+- `web` → `eslint .`
+- `mobile` → `eslint .`
+- `shared` → no lint script, so it is skipped
+
+**`test`**
+
+lerna run test
+
+Runs `test` in every package that has it:
+
+- `mobile` → `jest`
+- `web` and `shared` → no test scripts, so they are skipped
+
+**`postinstall`**
+
+npm run build --workspace=shared
+
+Runs automatically after `npm install` at the repo root.
+
+It compiles `shared` so `web` and `mobile` can import it immediately. Both depend on `"shared": "*"`, and `shared` exposes compiled output from `dist/` --- so a fresh install needs this build step.
+
+## 📋 Key Rules & Patterns
+
+### FSD Architecture Rules
+
+1. **Unidirectional Dependencies**: Only import from layers below
+2. **Public API**: Every slice must have `index.ts` barrel file
+3. **No Deep Imports**: Always import from barrel files
+4. **No Cross-Slice Imports**: Slices on same layer cannot import each other
+
+### Code Standards
+
+- **TypeScript**: Strict typing with explicit interfaces
+- **React**: Functional components with hooks
+- **Imports**: Automatic sorting with simple-import-sort
+- **Formatting**: Prettier with trailing commas and arrow parens
+- **Error Tracking**: Centralized logging with `trackError`, `logDev`, `warnDev`, `errorDev`
+- **Retry Logic**: Exponential backoff with `retryWithBackoff` utility
+
+## 📚 Documentation
+
+- **Architecture**: [docs/feature-sliced-design.md](mdc:docs/feature-sliced-design.md)
+- **Configuration**: [package.json](mdc:package.json), [tsconfig.json](mdc:tsconfig.json)
+
+## 🔧 Quick Reference
+
+### Creating New Components on either "mobile" or "web" packages
+
+1. Determine correct FSD layer (entity/feature/widget/shared)
+2. Create appropriate segment (ui/model/api/lib)
+3. Export through `index.ts` barrel file
+4. Follow naming conventions (PascalCase for components)
+
+### Styling Components for "web" package
+
+1. Use Tailwind CSS classes
+2. Apply `cn()` utility for conditional classes
+3. Use custom CSS variables for theming
+4. Follow responsive design patterns
+
+This project represents a modern, scalable frontend monorepo architecture for mobile and web platforms with clean code practices.

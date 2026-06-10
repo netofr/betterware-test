@@ -1,0 +1,380 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+description: Project structure and development workflow
+---
+
+# Project Structure & Development Workflow
+
+This project follows specific patterns for development, testing, and deployment.
+
+## Project Structure
+
+### Root Directory for monorepo
+
+```
+betterware/
+├── .cursor/commands/       # Cursor AI commands
+├── .cursor/rules/          # Cursor AI rules
+├── docs/                   # Documentation
+├── packages/               # Monorepo packages
+│   ├── mobile/             # React Native application for mobile
+│   ├── shared/             # Shared project with utilities for "web" and "mobile" projects
+│   └── web/                # ReactJs application for web
+├── lerna.json              # Monorepo configuration using lerna
+└── package.json            # Dependencies and scripts
+```
+
+### Root Directory for "web" application
+
+```
+packages/web/
+├── public/                 # Static assets
+├── src/                    # Source code (FSD architecture)
+├── eslint.config.js        # ESLint configuration
+├── index.html              # Main entry point for web application
+├── package.json            # Dependencies and scripts
+├── tsconfig.app.json       # Compiler options specific to main client-side application code
+├── tsconfig.json           # Compiler options for TypeScript
+├── tsconfig.node.json      # Covers the TypeScript settings for code that runs strictly in Node.js
+└── vite.config.js          # Configuration file for Vite
+```
+
+### Root Directory for "mobile" application
+
+```
+packages/mobile/
+├── android/                 # Fully functional Android Studio Gradle project
+├── ios/                     # Native Apple Xcode project workspace
+├── vendor/                  # Source code (FSD architecture)
+├── .eslintrc.js             # ESLint configuration
+├── .prettier.js             # Prettier configuration
+├── .watchmanconfig          # Configuration for file-watching service used by Metro
+├── app.json                 # The primary configuration file for React Native/Expo project
+├── App.tsx                  # Main entry component for user interface
+├── babel.config.js          # Pre-configured compiler rules to translate modern JavaScript/TypeScript syntax into code compatible with the underlying JavaScript engines
+├── Gemfile                  # Ruby dependencies required for your iOS development environment
+├── index.js                 # Entry point for the entire application
+├── jest.config.js           # How Jest runs and compiles unit and component tests
+├── metro.config.js          # Configuration file for the Metro Bundler
+├── package.json             # Project metadata, third-party dependencies, and automated execution scripts
+└── tsconfig.json            # Configuration settings for React Native CLI apps that leverage TypeScript
+```
+
+### Source Code Organization for both "web" and "mobile" applications
+
+```
+src/
+├── app/                    # Application initialization + FSD app layer
+├── entities/               # Business objects (nouns)
+│   └── [entity]/api/       # API operations
+├── features/               # User interactions (verbs)
+│   └── [feature]/api/      # API operations
+├── shared/                 # Reusable utilities
+│   ├── api/                # API clients
+│   ├── lib/                # Utilities
+│   ├── ui/                 # UI components
+│   └── constants/          # Constants
+├── widgets/                # Large UI blocks
+├── App.tsx                 # Home Page
+└── index.css               # Global styles
+```
+
+## Development Scripts
+
+### Available Commands from root directory
+
+```bash
+# Development
+npm run build                  # Everything that can build
+npm run build:shared           # Shared library only
+npm run web                    # Start development server with Turbopack
+npm run start:mobile           # Start the Metro bundler
+npm run ios / android          # Native app on device/simulator
+
+# Code Quality
+npm run lint                   # Run lint on projects
+npm run test                   # Unit testing
+```
+
+### Package Manager
+
+- **Package Manager**: npm 11.6.1
+- **Node Version**: Configured via `.nvmrc` (if present)
+- **Lock File**: `package-lock.lock`
+
+## Dependencies
+
+### Core Dependencies
+
+```json
+{
+  "next": "latest", // Next.js 15
+  "react": "^19.1.0", // React 19
+  "typescript": "^5.8.3", // TypeScript
+  "tailwindcss": "^3.4.1", // Tailwind CSS
+  "axios": "^1.12.2" // HTTP client
+}
+```
+
+### Development Dependencies
+
+```json
+{
+  "eslint": "^9.38.0", // ESLint
+  "prettier": "^3.5.3", // Prettier
+  "@conarti/eslint-plugin-feature-sliced": "^1.0.5", // FSD linting
+  "typescript-eslint": "^8.46.2", // TypeScript ESLint
+  "husky": "^9.1.7", // Git hooks
+  "lint-staged": "^15.5.2" // Pre-commit linting
+}
+```
+
+## Git Workflow
+
+### Pre-commit Hooks
+
+Configured in [package.json](mdc:package.json):
+
+```json
+{
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": "eslint --fix",
+    "src/**/*.{js,jsx,ts,tsx,css,scss,md}": "prettier --write --ignore-unknown"
+  }
+}
+```
+
+### Branch Naming
+
+- Prefer ticket-based branches: `{number}/{transformed_name}` (e.g. `42/fix_drawer_close_button`) — see [new-branch-rule.mdc](mdc:.cursor/rules/new-branch-rule.mdc)
+- Legacy: `feature/description`, `fix/description`, `hotfix/description`
+
+## Environment Configuration
+
+### Environment Variables
+
+```bash
+# Required for MSAL authentication
+NEXT_PUBLIC_CLIENT_ID=your-client-id
+NEXT_PUBLIC_AUTHORITY=https://login.microsoftonline.com/your-tenant-id
+NEXT_PUBLIC_REDIRECT_URI=http://localhost:3000/auth/callback
+
+# Required for GraphQL (Keystone)
+NEXT_PUBLIC_KEYSTONE_GRAPHQL_URL=https://graphql-endpoint.com/graphql
+NEXT_PUBLIC_KEYSTONE_SUBSCRIPTION_KEY=your-subscription-key
+
+# Optional
+NEXT_PUBLIC_API_URL=https://api.example.com
+```
+
+### Environment Validation
+
+```bash
+# Check environment variables
+yarn check:env
+```
+
+## Build Configuration
+
+### Next.js Configuration
+
+```typescript
+// next.config.ts
+const nextConfig = {
+  // Turbopack for development
+  experimental: {
+    turbo: {
+      // Turbopack configuration
+    },
+  },
+
+  // Build optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+};
+```
+
+### TypeScript Configuration
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "strict": false,
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+**Note:** This project currently has `strict: false`. Prefer explicit types and avoid `any`; consider enabling `strict: true` for new modules.
+
+## Logging & Error Tracking
+
+### Centralized Error Utilities
+
+The project includes comprehensive error tracking and logging utilities in `src/shared/lib/errorTracking.ts`:
+
+```typescript
+// ✅ Import error tracking utilities
+import {
+  trackError, // Track errors to external services
+  getErrorMessage, // Safely extract error messages
+  normalizeError, // Convert unknown errors to Error objects
+  logDev, // Development-only logging
+  warnDev, // Development-only warnings
+  errorDev, // Development-only errors
+  trackEvent, // Track events for analytics
+} from "@/shared/lib";
+
+// ✅ Error handling pattern
+try {
+  await riskyOperation();
+} catch (error) {
+  const errorObj = normalizeError(error);
+  trackError(errorObj, {
+    feature: "auth",
+    action: "login",
+    userId: user?.id,
+  });
+  throw errorObj;
+}
+
+// ✅ Development logging (automatically removed in production)
+logDev("User authenticated successfully", { userId: user.id });
+warnDev("Token expires in 5 minutes", { expiresAt: tokenExpiry });
+errorDev("Authentication failed", { error: error.message });
+
+// ✅ Event tracking for analytics
+trackEvent("user_login", {
+  method: "msal",
+  timestamp: Date.now(),
+  userId: user.id,
+});
+```
+
+### Retry Logic
+
+Use the retry utility with exponential backoff for resilient operations:
+
+```typescript
+import { retryWithBackoff } from "@/shared/lib";
+
+// ✅ Retry with exponential backoff
+const result = await retryWithBackoff(
+  async () => await syncTokenToServer(token),
+  {
+    maxAttempts: 3,
+    initialDelayMs: 1000,
+    maxDelayMs: 8000,
+    onRetry: (attempt, error) => {
+      logDev(`Retry attempt ${attempt}/3`, { error: error.message });
+    },
+  },
+);
+```
+
+### Error Context Guidelines
+
+Always provide meaningful context when tracking errors:
+
+```typescript
+// ✅ Good: Rich context for debugging
+trackError(error, {
+  feature: "auth",
+  action: "token-refresh",
+  userId: user?.id,
+  tokenExpiry: token?.exp,
+  retryAttempt: attempt,
+});
+
+// ❌ Poor: Minimal context
+trackError(error);
+```
+
+## Code Quality Tools
+
+### ESLint Configuration
+
+- **Base**: TypeScript ESLint recommended
+- **FSD**: Feature-Sliced Design plugin
+- **Import Sorting**: Simple import sort plugin
+- **React**: React and React Hooks plugins
+
+### Prettier Configuration
+
+```json
+{
+  "arrowParens": "avoid",
+  "trailingComma": "all"
+}
+```
+
+## Deployment
+
+### Netlify Configuration
+
+```toml
+# netlify.toml
+[build]
+  command = "yarn build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+```
+
+### Build Process
+
+1. Install dependencies: `yarn install`
+2. Run linting: `yarn lint`
+3. Build application: `yarn build`
+4. Deploy to Netlify
+
+## File Naming Conventions
+
+### Components
+
+- React components: `PascalCase.tsx`
+- Hooks: `useCamelCase.ts`
+- Utilities / API files: `kebab-case.ts` (see [naming-conventions.mdc](mdc:.cursor/rules/naming-conventions.mdc))
+- Types: `types.ts` or `types/index.ts`
+
+### Directories
+
+- FSD layers: `entities/`, `features/`, `shared/`, `widgets/`
+- Segments: `ui/`, `model/`, `api/`, `lib/`, `config/`
+- GraphQL operations: `[feature|entity]/api/*.keystone.graphql` (co-located with features/entities)
+- Generated code: `shared/api/generated/keystone/` (excluded from git, included in TypeScript)
+
+## Documentation
+
+### Required Documentation
+
+- Component JSDoc comments
+- API endpoint documentation
+- Architecture decisions in `docs/`
+- README.md for project overview
+
+### Code Comments
+
+```typescript
+/**
+ * Component Description
+ *
+ * Brief explanation of what this component does
+ * and its main responsibilities.
+ *
+ * @param props - Component props
+ * @returns JSX element
+ */
+export const Component = (props: Props) => {
+  // Implementation
+};
+```
+
+Reference: [package.json](mdc:package.json), [next.config.ts](mdc:next.config.ts), [tsconfig.json](mdc:tsconfig.json)

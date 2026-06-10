@@ -1,0 +1,149 @@
+---
+alwaysApply: true
+description: Feature-Sliced Design architecture rules and patterns
+---
+
+# Feature-Sliced Design (FSD) Architecture Rules
+
+This project follows **Feature-Sliced Design (FSD)** architecture pattern. Follow these rules strictly:
+
+## Layer Hierarchy & Dependencies
+
+**CRITICAL**: Dependencies flow ONLY upward (unidirectional):
+
+```
+app ↑ pages ↑ widgets ↑ features ↑ entities ↑ shared
+```
+
+### Layer Rules:
+
+- **`app`**: Application initialization (providers, global styles, router)
+- **`pages`**: Page components mapping to application routes
+- **`widgets`**: Large UI blocks combining features. Can import from `features`, `entities`, `shared`
+- **`features`**: User interactions (verbs). Can import from `entities`, `shared` ONLY
+- **`entities`**: Business objects (nouns). Can import from `shared` ONLY
+- **`shared`**: Reusable utilities, UI kit, API clients. Cannot import from any other layer
+
+### Slice Rules:
+
+- Slices on the same layer **CANNOT** import from each other
+- Each slice must have an `index.ts` file as its public API
+- Always import from barrel files: `import { Component } from '@/features/authenticate-user'`
+- Never deep import: `import { Component } from '@/features/authenticate-user/ui/Component'`
+
+## File Structure Patterns
+
+### Required Segments in Each Slice:
+
+- `ui/`: React components and presentation logic
+- `model/`: Business logic, state management, hooks
+- `api/`: External API interactions (GraphQL, REST)
+- `lib/`: Slice-specific utilities
+- `config/`: Constants and configuration
+
+## File Naming Conventions
+
+**CRITICAL**: Follow consistent naming for code clarity.
+
+- **Folders (Slices)**: `kebab-case` → `assign-script`, `talent-profile`
+- **React Components**: `PascalCase.tsx` → `TalentAvatar.tsx`, `ScriptDashboard.tsx`
+- **Custom Hooks**: `useCamelCase.ts` → `useTalent.ts`, `useAssignScript.ts`
+- **Utilities/Logic**: `kebab-case.ts` → `format-date.ts`, `parse-jwt.ts`
+- **API Files**: `kebab-case.query.ts`, `kebab-case.mutation.ts` → `get-talent.query.ts`, `assign-script.mutation.ts`
+- **Public API**: Always `index.ts` as barrel file
+
+✅ **Correct:**
+
+```typescript
+features/assign-script/
+  ├── ui/AssignScriptButton.tsx
+  ├── model/useAssignScript.ts
+  ├── api/assign-script.mutation.ts
+  └── index.ts
+```
+
+❌ **Incorrect:**
+
+```typescript
+features/AssignScript/          // ❌ Wrong: camelCase folder
+  ├── ui/AssignScriptButton.tsx // ❌ Wrong: camelCase file
+  ├── model/UseAssignScript.ts  // ❌ Wrong: PascalCase hook
+  └── api/assign_script.mutation.ts // ❌ Wrong: snake_case
+```
+
+See [naming-conventions.mdc](mdc:.cursor/rules/naming-conventions.mdc) for full details.
+
+### Example Structure:
+
+```
+src/
+├── app/
+├── widgets/
+│   └── layout/
+│       ├── Header.tsx
+│       └── index.ts
+├── features/
+│   └── auth/
+│       ├── ui/
+│       ├── lib/
+│       ├── index.ts
+├── entities/
+│   └── user/
+│       ├── api/
+│       ├── index.ts
+└── shared/
+    ├── ui/
+    ├── lib/
+    └── api/
+```
+
+## Import Patterns
+
+### Correct Imports:
+
+```typescript
+// ✅ Import from barrel files
+import { Button } from "@/shared/ui";
+import { useUserProfile } from "@/entities/user";
+import { Login } from "@/features/auth";
+
+// ✅ Layer-appropriate imports
+// In features/auth/ui/Login.tsx:
+import { Button } from "@/shared/ui"; // ✅ shared
+import { useUserProfile } from "@/entities/user"; // ✅ entities
+```
+
+### Forbidden Imports:
+
+```typescript
+// ❌ Deep imports
+import { Button } from "@/shared/ui/button/button";
+
+// ❌ Cross-layer violations
+// In shared/lib/utils.ts:
+import { Login } from "@/features/auth"; // ❌ shared cannot import features
+
+// ❌ Same-layer imports
+// In features/authenticate-user/ui/Login.tsx:
+import { ApproveButton } from "@/features/approve"; // ❌ features cannot import features
+```
+
+## Component Organization
+
+- **Entities**: Pure data models and API hooks (nouns)
+- **Features**: User interactions and business actions (verbs)
+- **Widgets**: Composition of multiple features and entities
+- **Shared**: Generic, reusable components and utilities
+
+## Public API Requirements
+
+Every slice MUST export through `index.ts`:
+
+```typescript
+// features/authenticate-user/index.ts
+export { Login } from "./ui/Login";
+export { useMsalEvent } from "./lib/useMsalEvent";
+export { msalConfig } from "./lib/msalConfig";
+```
+
+Reference: [docs/feature-sliced-design.md](mdc:docs/feature-sliced-design.md)

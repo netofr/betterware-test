@@ -1,0 +1,155 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+description: TypeScript and React coding standards
+---
+
+# TypeScript & React Coding Standards
+
+## TypeScript Configuration
+
+This project uses TypeScript (currently `strict: false` in tsconfig). Prefer explicit types, avoid `any`, and use type guards for `unknown`. Follow these patterns:
+
+### Type Safety
+
+- Prefer `unknown` over `any` for values from external sources; narrow with type guards.
+- Avoid `as` casts; use type guards or validation (e.g. Zod) when possible.
+- Use explicit return types on exported functions when they clarify the API.
+
+### Type Definitions
+
+```typescript
+// ✅ Use explicit interfaces for props
+interface ComponentProps {
+  title: string;
+  isVisible?: boolean;
+  onAction: () => void;
+}
+
+// ✅ Use type aliases for complex types
+type UserProfile = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+// ✅ Export types from barrel files
+export type { ComponentProps, UserProfile } from "./types";
+```
+
+### Path Aliases
+
+- Always use `@/` prefix for internal imports
+- Configured in [tsconfig.json](mdc:tsconfig.json): `"@/*": ["./src/*"]`
+
+```typescript
+// ✅ Correct path usage
+import { Button } from "@/shared/ui";
+import { useUserProfile } from "@/entities/user";
+import { Login } from "@/features/authenticate-user";
+
+// ❌ Avoid relative imports
+import { Button } from "../../../shared/ui/button";
+```
+
+## React Patterns
+
+### Component Structure
+
+```typescript
+/**
+ * Component Description
+ *
+ * Brief explanation of what this component does
+ * and its main responsibilities.
+ */
+
+"use client"; // Only for client components
+
+import React from "react";
+import { Button } from "@/shared/ui";
+
+interface ComponentProps {
+  // Props definition
+}
+
+export const Component = ({ prop1, prop2 }: ComponentProps) => {
+  // Component logic
+
+  return <div>{/* JSX content */}</div>;
+};
+```
+
+### Hooks Patterns
+
+```typescript
+// ✅ Custom hooks in model/ segment
+export const useCustomHook = () => {
+  const [state, setState] = useState();
+
+  useEffect(() => {
+    // Effect logic
+    return () => {
+      // Cleanup
+    };
+  }, []);
+
+  return { state, setState };
+};
+
+// ✅ Export hooks from barrel files
+export { useCustomHook } from "./model/useCustomHook";
+```
+
+## Code Organization
+
+### File Naming
+
+- Components: `PascalCase.tsx` (e.g., `UserProfile.tsx`)
+- Hooks: `useCamelCase.ts` (e.g., `useUserProfile.ts`)
+- Utilities / API files: `kebab-case.ts` (e.g., `format-date.ts`, `get-script.query.ts`) — see [naming-conventions.mdc](mdc:.cursor/rules/naming-conventions.mdc)
+- Types: `types.ts` or `types/index.ts`
+
+### Export Patterns
+
+```typescript
+// ✅ Named exports for components (preferred; FSD uses barrel re-exports)
+export const Button = () => {
+  /* ... */
+};
+
+// ✅ Default export only for Next.js pages (App Router)
+export default function Page() {
+  /* ... */
+}
+
+// ✅ Re-export from barrel files
+export { Button } from "./button/button";
+export { Input } from "./input/input";
+```
+
+## Performance Considerations
+
+### React Optimization
+
+```typescript
+// ✅ Use React.memo for expensive components
+export const ExpensiveComponent = React.memo(({ data }) => {
+  return <div>{/* expensive rendering */}</div>;
+});
+
+// ✅ Use useMemo for expensive calculations
+const expensiveValue = useMemo(() => {
+  return heavyCalculation(data);
+}, [data]);
+
+// ✅ Use useCallback for stable function references
+const handleClick = useCallback(() => {
+  onAction();
+}, [onAction]);
+```
+
+### Bundle Optimization
+
+- Use dynamic imports for code splitting
+- Import only what you need from libraries
+- Avoid importing entire libraries when possible

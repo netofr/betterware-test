@@ -1,0 +1,124 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+description: File naming conventions for Feature-Sliced Design
+---
+
+# File Naming Conventions
+
+**CRITICAL**: Follow these naming conventions strictly for consistency and code clarity.
+
+## Folder Naming (Slices)
+
+Use **`kebab-case`** for all folder names representing business domains (slices):
+
+✅ **Correct:**
+
+- `entities/talent`
+- `features/assign-script`
+- `widgets/talent-profile-header`
+
+❌ **Incorrect:**
+
+- `entities/Talent` (❌ PascalCase)
+- `features/assignScript` (❌ camelCase)
+- `widgets/talent_profile_header` (❌ snake_case)
+
+## File Naming by Type
+
+### React Components: `PascalCase.tsx`
+
+✅ **Correct:**
+
+- `TalentAvatar.tsx`
+- `ScriptDashboard.tsx`
+- `AssignScriptButton.tsx`
+
+❌ **Incorrect:**
+
+- `talent-avatar.tsx` (❌ kebab-case)
+- `talentAvatar.tsx` (❌ camelCase)
+- `Talent_Avatar.tsx` (❌ snake_case)
+
+### Custom Hooks: `useCamelCase.ts` or `useCamelCase.tsx`
+
+✅ **Correct:**
+
+- `useTalent.ts`
+- `useAssignScript.ts`
+- `useUserProfile.ts`
+
+❌ **Incorrect:**
+
+- `usetalent.ts` (❌ no "use" prefix)
+- `UseTalent.ts` (❌ PascalCase)
+- `use-talent.ts` (❌ kebab-case)
+
+### Utilities/Logic: `kebab-case.ts`
+
+✅ **Correct:**
+
+- `format-date.ts` (utility function)
+- `get-talent.query.ts` (API query)
+- `assign-script.mutation.ts` (API mutation)
+- `parse-jwt.ts` (utility)
+
+❌ **Incorrect:**
+
+- `format_date.ts` (❌ snake_case)
+- `FormatDate.ts` (❌ PascalCase)
+- `formatDate.ts` (❌ camelCase)
+- `formatdate.ts` (❌ no separators)
+
+### Public API Files: Always `index.ts`
+
+Every slice **MUST** have an `index.ts` barrel file:
+
+✅ **Correct:**
+
+- `entities/talent/index.ts`
+- `features/assign-script/index.ts`
+- `widgets/script-dashboard/index.ts`
+
+❌ **Incorrect:**
+
+- `entities/talent/export.ts` (❌ wrong name)
+- `features/assign-script/api.ts` (❌ wrong name)
+
+## Quick Reference
+
+| Type             | Convention               | Example                     |
+| ---------------- | ------------------------ | --------------------------- |
+| Folders (Slices) | `kebab-case`             | `assign-script`             |
+| React Components | `PascalCase.tsx`         | `TalentAvatar.tsx`          |
+| Custom Hooks     | `useCamelCase.ts`        | `useTalent.ts`              |
+| Utilities/Logic  | `kebab-case.ts`          | `format-date.ts`            |
+| API Queries      | `kebab-case.query.ts`    | `get-talent.query.ts`       |
+| API Mutations    | `kebab-case.mutation.ts` | `assign-script.mutation.ts` |
+| Public API       | `index.ts`               | `index.ts`                  |
+
+## Examples from the Codebase
+
+```typescript
+// ✅ Correct React component
+// File: src/entities/user/ui/UserAvatar.tsx
+export const UserAvatar = () => { ... };
+
+// ✅ Correct custom hook
+// File: src/entities/user/model/useUserProfile.ts
+export const useUserProfile = () => { ... };
+
+// ✅ Correct utility function
+// File: src/shared/lib/format-date.ts (kebab-case for utilities)
+export const formatDate = () => { ... };
+
+// ✅ Correct API query
+// File: src/entities/user/api/get-user.query.ts (kebab-case for API files)
+export const GET_USER_QUERY = gql`...`;
+
+// ✅ Correct public API
+// File: src/entities/user/index.ts
+export { UserAvatar } from "./ui/UserAvatar";
+export { useUserProfile } from "./model/useUserProfile";
+```
+
+Reference: [docs/feature-sliced-design.md](mdc:docs/feature-sliced-design.md)
