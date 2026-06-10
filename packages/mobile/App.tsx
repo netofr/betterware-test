@@ -18,6 +18,25 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import styled from 'styled-components/native';
+
+// Create a styled View using standard CSS syntax
+const Container = styled.View`
+  height: 80px;
+  background-color: #363636;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+// Create a styled Text component
+const TitleText = styled.Text`
+  font-size: 24px;
+  color: #d9dddc;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
+`;
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -48,6 +67,10 @@ function AppContent() {
         <Text style={styles.logoText}>Mobile App</Text>
         <Text style={styles.tagline}>Discover something amazing today.</Text>
         <Text style={styles.greeting}>{formatGreeting('Betterware')}</Text>
+
+        <Container>
+          <TitleText>Styled Components!</TitleText>
+        </Container>
       </View>
 
       {/* Bottom Button Section */}
