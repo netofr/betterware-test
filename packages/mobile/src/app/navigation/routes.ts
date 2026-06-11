@@ -9,6 +9,7 @@ export const screenToNavRoute: Partial<
   Products: 'products',
   ProductDetail: 'products',
   Cart: 'cart',
+  Checkout: 'cart',
 };
 
 export const navRouteToScreen: Record<NavRoute, keyof RootStackParamList> = {
@@ -17,10 +18,8 @@ export const navRouteToScreen: Record<NavRoute, keyof RootStackParamList> = {
   cart: 'Cart',
 };
 
-export const footerLinkToScreen: Record<
-  FooterLink,
-  keyof RootStackParamList
-> = {
-  shop: 'Products',
-  checkout: 'Checkout',
-};
+export const footerLinkToScreen: Record<FooterLink, keyof RootStackParamList> =
+  {
+    shop: 'Products',
+    checkout: 'Checkout',
+  };

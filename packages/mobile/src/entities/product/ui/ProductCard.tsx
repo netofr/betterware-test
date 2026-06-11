@@ -114,7 +114,7 @@ export function ProductCard({
         <Price>${price.toFixed(2)}</Price>
 
         <Actions>
-          <AddToCartButton productId={id} />
+          <AddToCartButton productId={id} productName={name} />
           <ViewDetailsButton onPress={handleViewDetails}>
             <ViewDetailsButtonText>View details</ViewDetailsButtonText>
           </ViewDetailsButton>

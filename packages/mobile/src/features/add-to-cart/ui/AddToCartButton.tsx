@@ -2,9 +2,11 @@ import { addToCart } from 'shared';
 import styled from 'styled-components/native';
 
 import { useAppDispatch } from '../../../app/hooks';
+import { useToast } from '../../../shared/ui';
 
 type AddToCartButtonProps = {
   productId: string;
+  productName: string;
 };
 
 const Button = styled.TouchableOpacity`
@@ -23,11 +25,16 @@ const ButtonText = styled.Text`
   font-weight: 600;
 `;
 
-export function AddToCartButton({ productId }: AddToCartButtonProps) {
+export function AddToCartButton({
+  productId,
+  productName,
+}: AddToCartButtonProps) {
   const dispatch = useAppDispatch();
+  const { showToast } = useToast();
 
   const handlePress = () => {
     dispatch(addToCart(productId));
+    showToast(`${productName} added to cart`);
   };
 
   return (

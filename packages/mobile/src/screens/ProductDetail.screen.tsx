@@ -123,7 +123,10 @@ export function ProductDetailScreen() {
             </Details>
 
             <Actions>
-              <AddToCartButton productId={product.id} />
+              <AddToCartButton
+                productId={product.id}
+                productName={product.name}
+              />
               <BackButton onPress={() => navigation.navigate('Products')}>
                 <BackButtonText>Back to products</BackButtonText>
               </BackButton>
