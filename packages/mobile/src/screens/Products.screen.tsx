@@ -4,28 +4,12 @@ import {
   selectProductsError,
   selectProductsStatus,
 } from 'shared';
-import styled from 'styled-components/native';
 
 import { useAppSelector } from '../app/hooks';
 import { ScreenLayout } from '../app/navigation';
 import { ProductCard } from '../entities/product';
 
-const Section = styled.View`
-  width: 100%;
-`;
-
-const ProductsTitle = styled.Text`
-  font-size: 18px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.textHeading};
-  margin-bottom: 12px;
-`;
-
-const StatusText = styled.Text`
-  color: ${({ theme }) => theme.colors.textMuted};
-  font-size: 13px;
-  margin-top: 8px;
-`;
+import { ProductsTitle, Section, StatusText } from './Products.screen.styles';
 
 export function ProductsScreen() {
   const products = useAppSelector(selectAllProducts);
