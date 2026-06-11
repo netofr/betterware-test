@@ -1,25 +1,22 @@
-import type { FooterLink, NavRoute } from '../../widgets';
+import { CommonActions } from '@react-navigation/native';
 
-import type { RootStackParamList } from './types';
+import type { FooterLink } from '../../widgets';
 
-export const screenToNavRoute: Partial<
-  Record<keyof RootStackParamList, NavRoute>
-> = {
-  Home: 'home',
-  Products: 'products',
-  ProductDetail: 'products',
-  Cart: 'cart',
-  Checkout: 'cart',
-};
+import type { AppNavigationProp } from './hooks';
 
-export const navRouteToScreen: Record<NavRoute, keyof RootStackParamList> = {
-  home: 'Home',
-  products: 'Products',
-  cart: 'Cart',
-};
+export function navigateFromFooter(
+  link: FooterLink,
+  navigation: AppNavigationProp,
+) {
+  if (link === 'shop') {
+    navigation.navigate('Products');
+    return;
+  }
 
-export const footerLinkToScreen: Record<FooterLink, keyof RootStackParamList> =
-  {
-    shop: 'Products',
-    checkout: 'Checkout',
-  };
+  navigation.dispatch(
+    CommonActions.navigate({
+      name: 'Cart',
+      params: { screen: 'Checkout' },
+    }),
+  );
+}

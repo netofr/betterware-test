@@ -35,7 +35,7 @@ export function CheckoutScreen() {
 
   useEffect(() => {
     if (lineItems.length === 0 && !hasCompletedPurchase) {
-      navigation.replace('Cart');
+      navigation.navigate('Cart');
     }
   }, [hasCompletedPurchase, lineItems.length, navigation]);
 
@@ -47,7 +47,7 @@ export function CheckoutScreen() {
 
   const handleCloseSuccessModal = () => {
     setIsSuccessModalVisible(false);
-    navigation.replace('Products');
+    navigation.navigate('Products');
   };
 
   if (lineItems.length === 0 && !hasCompletedPurchase) {

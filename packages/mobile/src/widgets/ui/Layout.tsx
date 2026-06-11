@@ -4,8 +4,7 @@ import { ThemeProvider } from 'styled-components/native';
 
 import { darkTheme, lightTheme } from '../../shared/theme';
 
-import { Footer, type FooterLink } from './Footer';
-import { Header, type NavRoute } from './Header';
+import { Header } from './Header';
 import {
   Container,
   Content,
@@ -19,19 +18,9 @@ type LayoutProps = {
   title: string;
   description: string;
   children: ReactNode;
-  activeRoute?: NavRoute;
-  onNavigate?: (route: NavRoute) => void;
-  onFooterNavigate?: (link: FooterLink) => void;
 };
 
-export function Layout({
-  title,
-  description,
-  children,
-  activeRoute,
-  onNavigate,
-  onFooterNavigate,
-}: LayoutProps) {
+export function Layout({ title, description, children }: LayoutProps) {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
@@ -43,13 +32,12 @@ export function Layout({
           backgroundColor={theme.colors.background}
         />
         <Container>
-          <Header activeRoute={activeRoute} onNavigate={onNavigate} />
+          <Header />
           <Main>
             <Title accessibilityRole="header">{title}</Title>
             <Description>{description}</Description>
             <Content>{children}</Content>
           </Main>
-          <Footer onNavigate={onFooterNavigate} />
         </Container>
       </SafeArea>
     </ThemeProvider>

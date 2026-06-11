@@ -1,20 +1,22 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { fetchProducts } from 'shared';
 
-import {
-  CartScreen,
-  CheckoutScreen,
-  HomeScreen,
-  ProductDetailScreen,
-  ProductsScreen,
-} from '../../screens';
+import { HomeScreen } from '../../screens';
 import { useAppDispatch } from '../hooks';
 
-import type { RootStackParamList } from './types';
+import { CartStackNavigator } from './CartStackNavigator';
+import { ProductsStackNavigator } from './ProductsStackNavigator';
+import { TabBar } from './TabBar';
+import type { RootTabParamList } from './types';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
+
+function renderTabBar(props: BottomTabBarProps) {
+  return <TabBar {...props} />;
+}
 
 function NavigationRoot() {
   const dispatch = useAppDispatch();
@@ -24,16 +26,23 @@ function NavigationRoot() {
   }, [dispatch]);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Products" component={ProductsScreen} />
-      <Stack.Screen
-        name="ProductDetail"
-        component={ProductDetailScreen}
+    <Tab.Navigator tabBar={renderTabBar} screenOptions={{ headerShown: false }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ title: 'Home' }}
       />
-      <Stack.Screen name="Cart" component={CartScreen} />
-      <Stack.Screen name="Checkout" component={CheckoutScreen} />
-    </Stack.Navigator>
+      <Tab.Screen
+        name="Products"
+        component={ProductsStackNavigator}
+        options={{ title: 'Products' }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartStackNavigator}
+        options={{ title: 'Cart' }}
+      />
+    </Tab.Navigator>
   );
 }
 
