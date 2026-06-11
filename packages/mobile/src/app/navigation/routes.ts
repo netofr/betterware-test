@@ -7,6 +7,7 @@ export const screenToNavRoute: Partial<
 > = {
   Home: 'home',
   Products: 'products',
+  ProductDetail: 'products',
   Cart: 'cart',
 };
 

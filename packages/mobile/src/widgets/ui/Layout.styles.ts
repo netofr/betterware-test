@@ -29,6 +29,6 @@ export const Description = styled.Text`
   margin-bottom: ${({ theme }) => theme.spacing.md}px;
 `;
 
-export const Content = styled.View`
+export const Content = styled.ScrollView`
   flex: 1;
 `;

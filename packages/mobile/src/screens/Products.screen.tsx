@@ -3,15 +3,14 @@ import {
   selectProductsCount,
   selectProductsError,
   selectProductsStatus,
-  selectSelectedProduct,
-  setSelectedProductId,
 } from 'shared';
 import styled from 'styled-components/native';
 
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppSelector } from '../app/hooks';
 import { ScreenLayout } from '../app/navigation';
+import { ProductCard } from '../entities/product';
 
-const Section = styled.ScrollView`
+const Section = styled.View`
   width: 100%;
 `;
 
@@ -22,38 +21,6 @@ const ProductsTitle = styled.Text`
   margin-bottom: 12px;
 `;
 
-interface ProductItemProps {
-  $isSelected?: boolean;
-}
-
-const ProductItem = styled.TouchableOpacity<ProductItemProps>`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${({ $isSelected, theme }) =>
-    $isSelected ? theme.colors.textHeading : theme.colors.textMuted};
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 8px;
-  border-width: 2px;
-  border-color: ${({ $isSelected, theme }) =>
-    $isSelected ? theme.colors.textHeading : 'transparent'};
-`;
-
-const ProductName = styled.Text`
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
-  flex: 1;
-  margin-right: 8px;
-`;
-
-const ProductPrice = styled.Text`
-  color: #e0e0e0;
-  font-size: 14px;
-`;
-
 const StatusText = styled.Text`
   color: ${({ theme }) => theme.colors.textMuted};
   font-size: 13px;
@@ -61,12 +28,10 @@ const StatusText = styled.Text`
 `;
 
 export function ProductsScreen() {
-  const dispatch = useAppDispatch();
   const products = useAppSelector(selectAllProducts);
   const productsCount = useAppSelector(selectProductsCount);
   const productsStatus = useAppSelector(selectProductsStatus);
   const productsError = useAppSelector(selectProductsError);
-  const selectedProduct = useAppSelector(selectSelectedProduct);
 
   return (
     <ScreenLayout title="Products" description="Products list">
@@ -79,18 +44,15 @@ export function ProductsScreen() {
           <StatusText>{productsError}</StatusText>
         ) : null}
         {products.map(product => (
-          <ProductItem
+          <ProductCard
             key={product.id}
-            $isSelected={selectedProduct?.id === product.id}
-            onPress={() => dispatch(setSelectedProductId(product.id))}
-          >
-            <ProductName>{product.name}</ProductName>
-            <ProductPrice>${product.price.toFixed(2)}</ProductPrice>
-          </ProductItem>
+            id={product.id}
+            name={product.name}
+            price={product.price}
+            category={product.category}
+            imageUrl={product.imageUrl}
+          />
         ))}
-        {selectedProduct ? (
-          <StatusText>{selectedProduct.description}</StatusText>
-        ) : null}
       </Section>
     </ScreenLayout>
   );

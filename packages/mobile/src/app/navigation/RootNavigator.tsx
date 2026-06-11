@@ -7,6 +7,7 @@ import {
   CartScreen,
   CheckoutScreen,
   HomeScreen,
+  ProductDetailScreen,
   ProductsScreen,
 } from '../../screens';
 import { useAppDispatch } from '../hooks';
@@ -26,6 +27,10 @@ function NavigationRoot() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Products" component={ProductsScreen} />
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetailScreen}
+      />
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
     </Stack.Navigator>
