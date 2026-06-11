@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -9,18 +11,18 @@ export function Footer() {
         </p>
 
         <nav className="flex items-center gap-4" aria-label="Footer navigation">
-          <a
-            href="#"
+          <Link
+            to="/products"
             className="text-sm text-text transition-colors hover:text-text-h"
           >
             Shop
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/cart"
             className="text-sm text-text transition-colors hover:text-text-h"
           >
             Checkout
-          </a>
+          </Link>
         </nav>
       </div>
     </footer>
