@@ -57,7 +57,7 @@ const ProductsSection = styled.View`
 const ProductsTitle = styled.Text`
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: #000000;
   margin-bottom: 12px;
   text-align: center;
 `;
