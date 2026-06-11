@@ -19,11 +19,11 @@ type PaymentFormData = {
 };
 
 const initialFormData: PaymentFormData = {
-  cardholderName: "",
-  cardNumber: "",
-  expiryDate: "",
-  cvv: "",
-  email: "",
+  cardholderName: "John Doe",
+  cardNumber: "1234 5678 9012 3456",
+  expiryDate: "12/2026",
+  cvv: "123",
+  email: "john.doe@example.com",
 };
 
 const inputClassName =
@@ -66,8 +66,7 @@ export function CheckoutPage() {
   };
 
   const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false);
-    navigate("/products");
+    navigate("/products", { replace: true });
   };
 
   return (
