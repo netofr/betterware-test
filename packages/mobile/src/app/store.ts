@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { productReducer } from 'shared';
+import { cartReducer, productReducer } from 'shared';
 
 export const store = configureStore({
   reducer: {
     products: productReducer,
+    cart: cartReducer,
   },
 });
 

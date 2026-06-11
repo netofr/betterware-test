@@ -1,14 +1,24 @@
 import { Link, useParams } from "react-router-dom";
-import { selectProductById } from "shared";
+import { addToCart, selectProductById } from "shared";
 
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useToast } from "../app/useToast";
 import { Layout } from "../widgets/ui/Layout";
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+  const { showToast } = useToast();
   const product = useAppSelector((state) =>
     id ? selectProductById(state, id) : undefined,
   );
+
+  const handleAddToCart = () => {
+    if (id && product) {
+      dispatch(addToCart(id));
+      showToast(`${product.name} added to cart`);
+    }
+  };
 
   return (
     <Layout title="Product details" description="Full product information">
@@ -46,12 +56,22 @@ export function ProductDetailPage() {
             </p>
             <p className="text-text">{product.description}</p>
 
-            <Link
-              to="/products"
-              className="mt-2 inline-flex w-fit rounded-md border border-border px-4 py-2 text-sm text-text-h transition-colors hover:bg-code-bg"
-            >
-              Back to products
-            </Link>
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                className="inline-flex w-fit cursor-pointer rounded-md border border-accent-border bg-accent-bg px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-accent hover:text-white"
+                onClick={handleAddToCart}
+              >
+                Add to cart
+              </button>
+
+              <Link
+                to="/products"
+                className="inline-flex w-fit rounded-md border border-border px-4 py-2 text-sm text-text-h transition-colors hover:bg-code-bg"
+              >
+                Back to products
+              </Link>
+            </div>
           </div>
         </section>
       )}

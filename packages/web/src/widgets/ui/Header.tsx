@@ -1,4 +1,7 @@
+import { selectCartItemsCount } from "shared";
 import { Link, NavLink } from "react-router-dom";
+
+import { useAppSelector } from "../../app/hooks";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -7,6 +10,8 @@ const navLinks = [
 ] as const;
 
 export function Header() {
+  const cartItemsCount = useAppSelector(selectCartItemsCount);
+
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-bg/90 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4">
@@ -31,7 +36,16 @@ export function Header() {
                 }`
               }
             >
-              {label}
+              {to === "/cart" && cartItemsCount > 0 ? (
+                <span className="inline-flex items-center gap-1.5">
+                  {label}
+                  <span className="inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-white">
+                    {cartItemsCount}
+                  </span>
+                </span>
+              ) : (
+                label
+              )}
             </NavLink>
           ))}
         </nav>

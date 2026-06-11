@@ -4,6 +4,24 @@ export type { ApiConfig } from "./api";
 export { formatGreeting } from "./utils/formatGreeting";
 
 export {
+  addToCart,
+  cartReducer,
+  clearCart,
+  decrementCartItem,
+  incrementCartItem,
+  removeFromCart,
+  selectAllCartItems,
+  selectCartItemByProductId,
+  selectCartItemQuantity,
+  selectCartItemsCount,
+  selectCartLineItems,
+  selectCartProductIds,
+  selectCartTotalAmount,
+  selectCartUniqueItemsCount,
+} from "./entities/cart";
+export type { CartItem, CartLineItem, CartState } from "./entities/cart";
+
+export {
   addProduct,
   fetchProducts,
   getProducts,

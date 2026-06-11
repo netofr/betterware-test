@@ -1,4 +1,8 @@
+import { addToCart } from "shared";
 import { useNavigate } from "react-router-dom";
+
+import { useAppDispatch } from "../../app/hooks";
+import { useToast } from "../../app/useToast";
 
 export type ProductCardProps = {
   id: string;
@@ -16,6 +20,13 @@ export function ProductCard({
   imageUrl,
 }: ProductCardProps) {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { showToast } = useToast();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(id));
+    showToast(`${name} added to cart`);
+  };
 
   return (
     <article className="flex flex-col overflow-hidden rounded-lg border border-border bg-bg text-left shadow-[var(--shadow)]">
@@ -38,13 +49,22 @@ export function ProductCard({
           ${price.toFixed(2)}
         </p>
 
-        <button
-          type="button"
-          className="mt-auto cursor-pointer rounded-md border border-accent-border bg-accent-bg px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-accent hover:text-white"
-          onClick={() => navigate(`/products/${id}`)}
-        >
-          View details
-        </button>
+        <div className="mt-auto flex flex-col gap-2">
+          <button
+            type="button"
+            className="cursor-pointer rounded-md border border-accent-border bg-accent-bg px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-accent hover:text-white"
+            onClick={handleAddToCart}
+          >
+            Add to cart
+          </button>
+          <button
+            type="button"
+            className="cursor-pointer rounded-md border border-border px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-code-bg"
+            onClick={() => navigate(`/products/${id}`)}
+          >
+            View details
+          </button>
+        </div>
       </div>
     </article>
   );

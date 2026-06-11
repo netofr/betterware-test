@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { configureApi } from 'shared'
 import { store } from './app/store'
+import { ToastProvider } from './app/ToastProvider'
 import './index.css'
 import App from './App.tsx'
 
@@ -13,7 +14,9 @@ configureApi({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </Provider>
   </StrictMode>,
 )
