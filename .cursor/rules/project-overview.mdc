@@ -50,7 +50,7 @@ src/
 ```
 src/
 ├── app/          # App initialization: providers, global styles, global navigation root
-├── pages/        # High-level screens or navigation entry points
+├── screens/      # High-level screens or navigation entry points
 ├── widgets/      # Self-contained layout combinations (e.g., Feed, Header)
 ├── features/     # User actions bringing business value (e.g., AddToCart)
 ├── entities/     # Business domains, data structures, and states (e.g., User, Product)

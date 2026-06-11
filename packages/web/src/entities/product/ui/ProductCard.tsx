@@ -1,8 +1,8 @@
 import { addToCart } from "shared";
 import { useNavigate } from "react-router-dom";
 
-import { useAppDispatch } from "../../app/hooks";
-import { useToast } from "../../app/useToast";
+import { useAppDispatch } from "../../../app/hooks";
+import { useToast } from "../../../app/useToast";
 
 export type ProductCardProps = {
   id: string;
@@ -45,9 +45,7 @@ export function ProductCard({
       <div className="flex flex-1 flex-col gap-2 p-4">
         <p className="text-xs uppercase tracking-wide text-text">{category}</p>
         <h3 className="text-base font-medium text-text-h">{name}</h3>
-        <p className="text-lg font-semibold text-text-h">
-          ${price.toFixed(2)}
-        </p>
+        <p className="text-lg font-semibold text-text-h">${price.toFixed(2)}</p>
 
         <div className="mt-auto flex flex-col gap-2">
           <button
