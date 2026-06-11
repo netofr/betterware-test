@@ -1,3 +1,4 @@
+import { Image } from 'react-native';
 import {
   decrementCartItem,
   incrementCartItem,
@@ -28,13 +29,45 @@ const Heading = styled.Text`
 const LineItem = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   border-radius: 8px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.border};
   background-color: ${({ theme }) => theme.colors.background};
   padding: 12px;
   margin-bottom: 12px;
+`;
+
+const ProductImageContainer = styled.View`
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme }) => theme.colors.border};
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+`;
+
+const ProductImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+`;
+
+const LineItemDetails = styled.View`
+  flex: 1;
+  gap: 4px;
+`;
+
+const UnitPrice = styled.Text`
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 13px;
+`;
+
+const LineItemFooter = styled.View`
+  align-items: flex-end;
+  gap: 8px;
 `;
 
 const QuantityControls = styled.View`
@@ -138,23 +171,40 @@ export function CartScreen() {
 
             {lineItems.map(({ product, quantity, lineTotal }) => (
               <LineItem key={product.id}>
-                <Heading>{product.name}</Heading>
-                <QuantityControls>
-                  <QuantityButton
-                    accessibilityLabel={`Decrease quantity of ${product.name}`}
-                    onPress={() => dispatch(decrementCartItem(product.id))}
-                  >
-                    <QuantityButtonText>−</QuantityButtonText>
-                  </QuantityButton>
-                  <QuantityText>{quantity}</QuantityText>
-                  <QuantityButton
-                    accessibilityLabel={`Increase quantity of ${product.name}`}
-                    onPress={() => dispatch(incrementCartItem(product.id))}
-                  >
-                    <QuantityButtonText>+</QuantityButtonText>
-                  </QuantityButton>
-                </QuantityControls>
-                <LineTotal>${lineTotal.toFixed(2)}</LineTotal>
+                <ProductImageContainer>
+                  {product.imageUrl ? (
+                    <ProductImage
+                      source={{ uri: product.imageUrl }}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Text>No image</Text>
+                  )}
+                </ProductImageContainer>
+
+                <LineItemDetails>
+                  <Heading>{product.name}</Heading>
+                  <UnitPrice>${product.price.toFixed(2)} each</UnitPrice>
+                </LineItemDetails>
+
+                <LineItemFooter>
+                  <QuantityControls>
+                    <QuantityButton
+                      accessibilityLabel={`Decrease quantity of ${product.name}`}
+                      onPress={() => dispatch(decrementCartItem(product.id))}
+                    >
+                      <QuantityButtonText>−</QuantityButtonText>
+                    </QuantityButton>
+                    <QuantityText>{quantity}</QuantityText>
+                    <QuantityButton
+                      accessibilityLabel={`Increase quantity of ${product.name}`}
+                      onPress={() => dispatch(incrementCartItem(product.id))}
+                    >
+                      <QuantityButtonText>+</QuantityButtonText>
+                    </QuantityButton>
+                  </QuantityControls>
+                  <LineTotal>${lineTotal.toFixed(2)}</LineTotal>
+                </LineItemFooter>
               </LineItem>
             ))}
 

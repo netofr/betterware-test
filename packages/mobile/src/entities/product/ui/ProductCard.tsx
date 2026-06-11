@@ -2,6 +2,7 @@ import { Image } from 'react-native';
 import styled from 'styled-components/native';
 
 import { useAppNavigation } from '../../../app/navigation';
+import { AddToCartButton } from '../../../features/add-to-cart';
 
 export type ProductCardProps = {
   id: string;
@@ -64,8 +65,12 @@ const Price = styled.Text`
   font-weight: 700;
 `;
 
-const ViewDetailsButton = styled.TouchableOpacity`
+const Actions = styled.View`
   margin-top: 8px;
+  gap: 8px;
+`;
+
+const ViewDetailsButton = styled.TouchableOpacity`
   border-radius: 8px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.border};
@@ -108,9 +113,12 @@ export function ProductCard({
         <Name>{name}</Name>
         <Price>${price.toFixed(2)}</Price>
 
-        <ViewDetailsButton onPress={handleViewDetails}>
-          <ViewDetailsButtonText>View details</ViewDetailsButtonText>
-        </ViewDetailsButton>
+        <Actions>
+          <AddToCartButton productId={id} />
+          <ViewDetailsButton onPress={handleViewDetails}>
+            <ViewDetailsButtonText>View details</ViewDetailsButtonText>
+          </ViewDetailsButton>
+        </Actions>
       </Content>
     </Card>
   );

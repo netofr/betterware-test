@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 
 import { useAppSelector } from '../app/hooks';
 import { ScreenLayout, useAppNavigation, useAppRoute } from '../app/navigation';
+import { AddToCartButton } from '../features/add-to-cart';
 
 const Section = styled.View`
   width: 100%;
@@ -61,8 +62,12 @@ const PlaceholderText = styled.Text`
   font-size: 14px;
 `;
 
+const Actions = styled.View`
+  gap: 8px;
+  align-self: flex-start;
+`;
+
 const BackButton = styled.TouchableOpacity`
-  margin-top: 8px;
   border-radius: 8px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.border};
@@ -117,9 +122,12 @@ export function ProductDetailScreen() {
               <Description>{product.description}</Description>
             </Details>
 
-            <BackButton onPress={() => navigation.navigate('Products')}>
-              <BackButtonText>Back to products</BackButtonText>
-            </BackButton>
+            <Actions>
+              <AddToCartButton productId={product.id} />
+              <BackButton onPress={() => navigation.navigate('Products')}>
+                <BackButtonText>Back to products</BackButtonText>
+              </BackButton>
+            </Actions>
           </>
         )}
       </Section>
