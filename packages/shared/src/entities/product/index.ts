@@ -1,4 +1,4 @@
-export { getProducts } from './api/get-products';
+export { getProducts } from "./api/get-products";
 export {
   addProduct,
   productReducer,
@@ -8,9 +8,9 @@ export {
   setProductsError,
   setProductsStatus,
   setSelectedProductId,
-} from './productSlice';
-export { fetchProducts } from './productThunks';
-export type { ProductsState } from './productSlice';
+} from "./productSlice";
+export { fetchProducts } from "./productThunks";
+export type { ProductsState } from "./productSlice";
 export {
   selectAllProducts,
   selectProductById,
@@ -20,6 +20,5 @@ export {
   selectProductsStatus,
   selectSelectedProduct,
   selectSelectedProductId,
-} from './productSelectors';
-export { MOCK_PRODUCTS } from './mock-products';
-export type { Product, ProductsStatus } from './types';
+} from "./productSelectors";
+export type { Product, ProductsStatus } from "./types";

@@ -1,13 +1,12 @@
-export { apiClient, configureApi, getApiConfig } from './api';
-export type { ApiConfig } from './api';
+export { apiClient, configureApi, getApiConfig } from "./api";
+export type { ApiConfig } from "./api";
 
-export { formatGreeting } from './utils/formatGreeting';
+export { formatGreeting } from "./utils/formatGreeting";
 
 export {
   addProduct,
   fetchProducts,
   getProducts,
-  MOCK_PRODUCTS,
   productReducer,
   removeProduct,
   selectAllProducts,
@@ -19,5 +18,9 @@ export {
   selectSelectedProductId,
   setProducts,
   setSelectedProductId,
-} from './entities/product';
-export type { Product, ProductsState, ProductsStatus } from './entities/product';
+} from "./entities/product";
+export type {
+  Product,
+  ProductsState,
+  ProductsStatus,
+} from "./entities/product";
