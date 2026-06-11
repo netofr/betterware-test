@@ -1,31 +1,58 @@
 import {
+  fetchProducts,
   selectAllProducts,
   selectProductsCount,
   selectProductsError,
   selectProductsStatus,
 } from 'shared';
 
-import { useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { ScreenLayout } from '../app/navigation';
 import { ProductCard } from '../entities/product';
 import { ProductCardSkeleton } from '../shared/ui';
 
-import { ProductsTitle, Section, StatusText } from './Products.screen.styles';
+import {
+  ErrorContainer,
+  ErrorContent,
+  ErrorMessage,
+  ErrorTitle,
+  ProductsTitle,
+  RetryButton,
+  RetryButtonText,
+  Section,
+} from './Products.screen.styles';
 
 const SKELETON_COUNT = 6;
 
 export function ProductsScreen() {
+  const dispatch = useAppDispatch();
   const products = useAppSelector(selectAllProducts);
   const productsCount = useAppSelector(selectProductsCount);
   const productsStatus = useAppSelector(selectProductsStatus);
   const productsError = useAppSelector(selectProductsError);
+
+  const handleRetry = () => {
+    dispatch(fetchProducts());
+  };
 
   return (
     <ScreenLayout title="Products" description="Products list">
       <Section>
         <ProductsTitle>Products ({productsCount})</ProductsTitle>
         {productsStatus === 'failed' && productsError ? (
-          <StatusText>{productsError}</StatusText>
+          <ErrorContainer>
+            <ErrorContent>
+              <ErrorTitle>Error Loading Products...</ErrorTitle>
+              <ErrorMessage>{productsError}</ErrorMessage>
+            </ErrorContent>
+            <RetryButton
+              onPress={handleRetry}
+              accessibilityRole="button"
+              accessibilityLabel="Try again"
+            >
+              <RetryButtonText>Try Again</RetryButtonText>
+            </RetryButton>
+          </ErrorContainer>
         ) : null}
         {productsStatus === 'loading'
           ? Array.from({ length: SKELETON_COUNT }, (_, index) => (
