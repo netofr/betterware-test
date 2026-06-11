@@ -4,6 +4,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
+import { fetchProducts } from './productThunks';
 import type { Product, ProductsStatus } from './types';
 
 export const productsAdapter = createEntityAdapter<Product>();
@@ -44,6 +45,22 @@ const productSlice = createSlice({
       state.error = action.payload;
       state.status = 'failed';
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        productsAdapter.setAll(state, action.payload);
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload ?? 'Failed to fetch products';
+      });
   },
 });
 

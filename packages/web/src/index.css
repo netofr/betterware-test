@@ -79,9 +79,11 @@
   h1 {
     @apply text-4xl tracking-[-1.68px];
   }
-
   h2 {
-    @apply text-2xl leading-[118%] tracking-[-0.24px];
+    @apply text-2xl tracking-[-0.24px];
+  }
+  h2 {
+    @apply text-2xl tracking-[-0.12px];
   }
 
   p {

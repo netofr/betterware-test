@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import {
-  MOCK_PRODUCTS,
+  fetchProducts,
   selectAllProducts,
   selectProductsCount,
+  selectProductsError,
+  selectProductsStatus,
   selectSelectedProduct,
-  setProducts,
   setSelectedProductId,
 } from "shared";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
@@ -13,10 +14,12 @@ function App() {
   const dispatch = useAppDispatch();
   const products = useAppSelector(selectAllProducts);
   const productsCount = useAppSelector(selectProductsCount);
+  const productsStatus = useAppSelector(selectProductsStatus);
+  const productsError = useAppSelector(selectProductsError);
   const selectedProduct = useAppSelector(selectSelectedProduct);
 
   useEffect(() => {
-    dispatch(setProducts(MOCK_PRODUCTS));
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   return (
@@ -29,7 +32,13 @@ function App() {
       </section>
 
       <section className="mx-auto mb-8 w-[480px] px-4">
-        <h2 className="mb-3">Products ({productsCount})</h2>
+        <h3 className="mb-3 font-bold">Products ({productsCount})</h3>
+        {productsStatus === "loading" ? (
+          <p className="text-text">Loading products…</p>
+        ) : null}
+        {productsStatus === "failed" && productsError ? (
+          <p className="text-text">{productsError}</p>
+        ) : null}
         <ul className="m-0 list-none p-0">
           {products.map((product) => {
             const isSelected = selectedProduct?.id === product.id;
@@ -38,8 +47,10 @@ function App() {
               <li key={product.id}>
                 <button
                   type="button"
-                  className={`mb-2 flex w-full cursor-pointer justify-between rounded-lg border-2 bg-neutral-500 px-4 py-3 font-inherit text-white ${
-                    isSelected ? "border-black" : "border-border"
+                  className={`mb-2 flex w-full cursor-pointer justify-between rounded-lg border-2 px-4 py-3 font-inherit text-white ${
+                    isSelected
+                      ? "border-black bg-black"
+                      : "border-neutral-600 bg-neutral-600"
                   }`}
                   onClick={() => dispatch(setSelectedProductId(product.id))}
                 >

@@ -1,7 +1,12 @@
+export { apiClient, configureApi, getApiConfig } from './api';
+export type { ApiConfig } from './api';
+
 export { formatGreeting } from './utils/formatGreeting';
 
 export {
   addProduct,
+  fetchProducts,
+  getProducts,
   MOCK_PRODUCTS,
   productReducer,
   removeProduct,

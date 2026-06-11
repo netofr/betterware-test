@@ -1,6 +1,8 @@
 const path = require('path');
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
+require('./scripts/sync-env');
+
 const projectRoot = __dirname;
 const monorepoRoot = path.resolve(projectRoot, '../..');
 

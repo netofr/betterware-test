@@ -1,9 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { configureApi } from 'shared'
 import { store } from './app/store'
 import './index.css'
 import App from './App.tsx'
+
+configureApi({
+  productsEndpoint: import.meta.env.VITE_PRODUCTS_API_URL,
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

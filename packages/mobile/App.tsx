@@ -9,17 +9,24 @@ import { useEffect } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import {
-  MOCK_PRODUCTS,
+  configureApi,
+  fetchProducts,
   selectAllProducts,
   selectProductsCount,
+  selectProductsError,
+  selectProductsStatus,
   selectSelectedProduct,
-  setProducts,
   setSelectedProductId,
 } from 'shared';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { useAppDispatch, useAppSelector } from './src/app/hooks';
 import { store } from './src/app/store';
+import { PRODUCTS_API_URL } from './src/config/env';
+
+configureApi({
+  productsEndpoint: PRODUCTS_API_URL,
+});
 
 // Create a styled View using standard CSS syntax
 const Container = styled.View`
@@ -48,7 +55,7 @@ const SubTitleText = styled.Text`
   text-align: center;
 `;
 
-const ProductsSection = styled.View`
+const ProductsSection = styled.ScrollView`
   width: 100%;
   margin-top: 24px;
   padding-horizontal: 8px;
@@ -118,10 +125,12 @@ function AppContent() {
   const dispatch = useAppDispatch();
   const products = useAppSelector(selectAllProducts);
   const productsCount = useAppSelector(selectProductsCount);
+  const productsStatus = useAppSelector(selectProductsStatus);
+  const productsError = useAppSelector(selectProductsError);
   const selectedProduct = useAppSelector(selectSelectedProduct);
 
   useEffect(() => {
-    dispatch(setProducts(MOCK_PRODUCTS));
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   return (
@@ -133,6 +142,12 @@ function AppContent() {
 
         <ProductsSection>
           <ProductsTitle>Products ({productsCount})</ProductsTitle>
+          {productsStatus === 'loading' ? (
+            <SelectedProductText>Loading products…</SelectedProductText>
+          ) : null}
+          {productsStatus === 'failed' && productsError ? (
+            <SelectedProductText>{productsError}</SelectedProductText>
+          ) : null}
           {products.map(product => (
             <ProductItem
               key={product.id}

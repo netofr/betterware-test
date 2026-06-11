@@ -1,3 +1,4 @@
+export { getProducts } from './api/get-products';
 export {
   addProduct,
   productReducer,
@@ -8,6 +9,7 @@ export {
   setProductsStatus,
   setSelectedProductId,
 } from './productSlice';
+export { fetchProducts } from './productThunks';
 export type { ProductsState } from './productSlice';
 export {
   selectAllProducts,

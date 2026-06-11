@@ -4,6 +4,7 @@ dist/
 *.log
 .env
 .env.*
+!.env.example
 
 # React Native
 packages/mobile/ios/Pods/
