@@ -1,0 +1,784 @@
+---
+globs: *.ts,*.tsx,*.js,*.jsx
+alwaysApply: true
+---
+
+# Styled Components Standards & Best Practices (React Native + TypeScript)
+
+> This document defines the standards, architectural guidelines, and code generation rules for using Styled Components in React Native CLI applications built with TypeScript. All AI-generated code must follow these conventions.
+
+---
+
+# Core Principles
+
+- Use `styled-components/native` as the primary styling solution.
+- Use TypeScript for all styled component definitions.
+- Follow a design-system-first approach.
+- Prefer reusable styled components over inline styling.
+- Centralize colors, spacing, typography, and sizing tokens.
+- Keep styling predictable, scalable, and maintainable.
+- Separate business logic from presentation.
+- Build components that are theme-aware and reusable.
+
+---
+
+# Technology Standards
+
+## Required Libraries
+
+Use:
+
+```bash
+styled-components
+styled-components/native
+```
+
+TypeScript definitions:
+
+```bash
+@types/styled-components
+@types/styled-components-react-native
+```
+
+---
+
+## Imports
+
+Always import from:
+
+```typescript
+import styled from 'styled-components/native';
+```
+
+Avoid:
+
+```typescript
+import styled from 'styled-components';
+```
+
+inside React Native applications.
+
+---
+
+# Project Structure
+
+Recommended structure:
+
+```text
+src/
+├── components/
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   ├── Button.styles.ts
+│   │   ├── Button.types.ts
+│   │   └── index.ts
+│
+├── screens/
+│   ├── Home/
+│   │   ├── HomeScreen.tsx
+│   │   └── HomeScreen.styles.ts
+│
+├── theme/
+│   ├── colors.ts
+│   ├── spacing.ts
+│   ├── typography.ts
+│   ├── shadows.ts
+│   ├── metrics.ts
+│   ├── theme.ts
+│   └── styled.d.ts
+│
+└── shared/
+```
+
+---
+
+# Styling File Organization
+
+## Separate Styles from Components
+
+Preferred:
+
+```text
+Button.tsx
+Button.styles.ts
+```
+
+Example:
+
+```typescript
+// Button.styles.ts
+
+export const Container = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+`;
+```
+
+Avoid:
+
+```typescript
+const Button = () => {
+  const Container = styled.View`
+    ...
+  `;
+};
+```
+
+Never create styled components inside React components.
+
+---
+
+# Theme Usage
+
+## Always Use Theme Tokens
+
+Good:
+
+```typescript
+background-color: ${({ theme }) => theme.colors.primary};
+```
+
+Avoid:
+
+```typescript
+background-color: #2563eb;
+```
+
+---
+
+## Centralize Design Tokens
+
+Theme should contain:
+
+```typescript
+theme.colors;
+theme.spacing;
+theme.typography;
+theme.borderRadius;
+theme.shadows;
+theme.zIndex;
+theme.metrics;
+```
+
+Example:
+
+```typescript
+export const theme = {
+  colors: {
+    primary: '#2563EB',
+    secondary: '#64748B',
+  },
+};
+```
+
+---
+
+## Never Hardcode Design Values
+
+Bad:
+
+```typescript
+padding: 17px;
+font-size: 15px;
+border-radius: 13px;
+```
+
+Good:
+
+```typescript
+padding: ${({ theme }) => theme.spacing.md}px;
+font-size: ${({ theme }) => theme.typography.body}px;
+border-radius: ${({ theme }) => theme.borderRadius.md}px;
+```
+
+---
+
+# Styled Component Naming
+
+## Use Semantic Names
+
+Good:
+
+```typescript
+Container;
+Wrapper;
+Content;
+Title;
+Subtitle;
+ButtonContainer;
+IconWrapper;
+```
+
+Avoid:
+
+```typescript
+BlueContainer;
+BigBox;
+MainDiv;
+RedText;
+```
+
+---
+
+## Export Named Components
+
+Preferred:
+
+```typescript
+export const Container = styled.View``;
+export const Title = styled.Text``;
+```
+
+Avoid:
+
+```typescript
+export default styled.View``;
+```
+
+---
+
+# Component Structure
+
+## Recommended Order
+
+```typescript
+// imports
+
+// types
+
+// styled components
+
+// component
+
+// export
+```
+
+Example:
+
+```typescript
+import React from 'react';
+import styled from 'styled-components/native';
+
+interface Props {
+  title: string;
+}
+
+const Container = styled.View``;
+
+export const Example = ({ title }: Props) => {
+  return <Container />;
+};
+```
+
+---
+
+# Layout Standards
+
+## Prefer Flexbox
+
+Use Flexbox for layouts.
+
+Preferred:
+
+```typescript
+justify-content: center;
+align-items: center;
+flex-direction: row;
+```
+
+Avoid unnecessary positioning.
+
+---
+
+## Avoid Absolute Positioning
+
+Use only when required.
+
+Bad:
+
+```typescript
+position: absolute;
+top: 14px;
+left: 27px;
+```
+
+Good:
+
+```typescript
+justify-content: space-between;
+align-items: center;
+```
+
+---
+
+# Spacing Standards
+
+## Use Theme Spacing
+
+Example:
+
+```typescript
+padding: ${({ theme }) => theme.spacing.md}px;
+margin-bottom: ${({ theme }) => theme.spacing.lg}px;
+```
+
+Recommended scale:
+
+```typescript
+xs: 4;
+sm: 8;
+md: 16;
+lg: 24;
+xl: 32;
+xxl: 48;
+```
+
+---
+
+## Prefer Gap (RN Version Supporting It)
+
+Preferred:
+
+```typescript
+gap: ${({ theme }) => theme.spacing.sm}px;
+```
+
+Otherwise use dedicated wrappers.
+
+Avoid repetitive margins.
+
+---
+
+# Typography Standards
+
+## Use Typography Tokens
+
+Good:
+
+```typescript
+font-size: ${({ theme }) => theme.typography.body}px;
+font-weight: ${({ theme }) => theme.typography.weights.medium};
+```
+
+Avoid:
+
+```typescript
+font-size: 15px;
+font-weight: 530;
+```
+
+---
+
+## Create Reusable Typography Components
+
+Example:
+
+```typescript
+export const Heading = styled.Text`
+  font-size: ${({ theme }) => theme.typography.h2}px;
+  font-weight: ${({ theme }) => theme.typography.weights.bold};
+`;
+```
+
+---
+
+# Colors
+
+## Semantic Colors Only
+
+Preferred:
+
+```typescript
+theme.colors.primary;
+theme.colors.background;
+theme.colors.text;
+theme.colors.success;
+theme.colors.error;
+```
+
+Avoid:
+
+```typescript
+#3b82f6
+#ef4444
+#22c55e
+```
+
+inside components.
+
+---
+
+# Responsive Design
+
+## Use Device Metrics Utilities
+
+Example:
+
+```typescript
+import { Dimensions } from 'react-native';
+```
+
+or centralized helpers.
+
+Prefer:
+
+```typescript
+theme.metrics.screenWidth;
+theme.metrics.screenHeight;
+```
+
+---
+
+## Avoid Hardcoded Screen Sizes
+
+Bad:
+
+```typescript
+width: 375px;
+```
+
+Good:
+
+```typescript
+width: 100%;
+```
+
+or responsive calculations.
+
+---
+
+# Variants
+
+## Support Variants Through Props
+
+Good:
+
+```typescript
+<Button variant="primary" />
+<Button variant="secondary" />
+```
+
+---
+
+## Typed Variants
+
+Example:
+
+```typescript
+type Variant = 'primary' | 'secondary' | 'danger';
+```
+
+---
+
+## Variant Styling
+
+```typescript
+interface ButtonProps {
+  variant: Variant;
+}
+
+export const ButtonContainer = styled.TouchableOpacity<ButtonProps>`
+  background-color: ${({ variant, theme }) => {
+    switch (variant) {
+      case 'primary':
+        return theme.colors.primary;
+
+      case 'danger':
+        return theme.colors.error;
+
+      default:
+        return theme.colors.secondary;
+    }
+  }};
+`;
+```
+
+---
+
+# Performance Standards
+
+## Never Declare Styled Components Inside Components
+
+Bad:
+
+```typescript
+const Screen = () => {
+  const Container = styled.View`
+    flex: 1;
+  `;
+};
+```
+
+Good:
+
+```typescript
+const Container = styled.View`
+  flex: 1;
+`;
+
+const Screen = () => {
+  return <Container />;
+};
+```
+
+---
+
+## Avoid Dynamic Styles When Possible
+
+Bad:
+
+```typescript
+background-color: ${props => props.color};
+```
+
+Prefer typed variants.
+
+---
+
+## Keep Styling Deterministic
+
+Styles should be predictable and theme-driven.
+
+---
+
+# React Native Specific Rules
+
+## Use Native Components
+
+Preferred:
+
+```typescript
+styled.View;
+styled.Text;
+styled.Image;
+styled.ScrollView;
+styled.FlatList;
+styled.TouchableOpacity;
+styled.Pressable;
+```
+
+Avoid unnecessary wrappers.
+
+---
+
+## Pressable Preferred for New Components
+
+Prefer:
+
+```typescript
+styled.Pressable;
+```
+
+instead of:
+
+```typescript
+styled.TouchableOpacity;
+```
+
+for new implementations.
+
+---
+
+# Accessibility
+
+## Add Accessibility Props
+
+Example:
+
+```tsx
+<Button accessibilityRole="button" accessibilityLabel="Save changes" />
+```
+
+---
+
+## Touch Targets
+
+Interactive elements should be at least:
+
+```text
+44 x 44 dp
+```
+
+Preferred:
+
+```typescript
+min-height: 44px;
+min-width: 44px;
+```
+
+---
+
+# Animation Standards
+
+## Use Reanimated for Complex Animations
+
+Preferred:
+
+```typescript
+react - native - reanimated;
+```
+
+Avoid animation-heavy Styled Components.
+
+---
+
+## Keep Animations Separate
+
+Do not mix complex animation logic inside style definitions.
+
+---
+
+# TypeScript Standards
+
+## Type Every Styled Component Prop
+
+Good:
+
+```typescript
+interface ContainerProps {
+  selected: boolean;
+}
+```
+
+```typescript
+styled.View<ContainerProps>`
+```
+
+Avoid:
+
+```typescript
+styled.View<any>`
+```
+
+---
+
+## Never Use Any
+
+Bad:
+
+```typescript
+interface Props {
+  data: any;
+}
+```
+
+Good:
+
+```typescript
+interface Props {
+  data: User;
+}
+```
+
+---
+
+# Reusable Component Standards
+
+## Extract Common Components
+
+Create reusable:
+
+```text
+Button
+Input
+Card
+Avatar
+Badge
+Divider
+ScreenContainer
+Typography
+```
+
+instead of duplicating styles.
+
+---
+
+## Prefer Composition
+
+Good:
+
+```tsx
+<Card>
+  <CardHeader />
+  <CardContent />
+</Card>
+```
+
+Avoid monolithic components.
+
+---
+
+# Dark Mode
+
+## Theme-Based Dark Mode
+
+All components must support:
+
+```typescript
+theme.colors.background;
+theme.colors.surface;
+theme.colors.text;
+```
+
+Never hardcode light-theme values.
+
+---
+
+# Anti-Patterns
+
+Avoid:
+
+- Inline style objects.
+- Hardcoded colors.
+- Hardcoded spacing values.
+- Styled components inside functions.
+- Large monolithic components.
+- Deep prop drilling for styling.
+- Magic numbers.
+- Unnamed wrappers.
+- Using `any`.
+- Mixing business logic with styles.
+- Creating duplicate components with minor style differences.
+- Hardcoded dimensions tied to specific devices.
+
+---
+
+# Cursor AI Generation Rules
+
+When generating React Native + TypeScript code:
+
+1. Use `styled-components/native`.
+2. Always use theme tokens.
+3. Create styles in separate `.styles.ts` files.
+4. Use semantic component names.
+5. Export named styled components.
+6. Type all component props.
+7. Never use `any`.
+8. Support light and dark themes.
+9. Prefer `Pressable` for interactive components.
+10. Use typed variants instead of arbitrary style props.
+11. Never create styled components inside React components.
+12. Follow feature-based architecture.
+13. Prefer composition over inheritance.
+14. Use reusable design-system components.
+15. Keep styling deterministic and theme-driven.
+
+---
+
+# Golden Rules
+
+1. Theme first.
+2. Reusability first.
+3. Type safety first.
+4. Accessibility first.
+5. Composition over duplication.
+6. Semantic naming over visual naming.
+7. Tokens over hardcoded values.
+8. Variants over dynamic styling.
+9. Separate styling from business logic.
+10. Styled components must be declared outside render functions.
+11. Every component should be scalable.
+12. Every style should be design-system driven.
+13. Prefer maintainability over convenience.
+14. Avoid magic numbers.
+15. Build for long-term consistency.

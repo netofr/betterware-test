@@ -26,8 +26,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (max-width: 1024px) {
+@media (max-width: 1024px) {
+  :root {
     font-size: 16px;
   }
 }
@@ -46,67 +48,48 @@
     --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
       rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+@theme inline {
+  --color-text: var(--text);
+  --color-text-h: var(--text-h);
+  --color-border: var(--border);
+  --color-code-bg: var(--code-bg);
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-border: var(--accent-border);
+  --color-social-bg: var(--social-bg);
+}
+
+@layer base {
+  body {
+    @apply m-0;
   }
-}
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  #root {
+    @apply mx-auto box-border flex min-h-svh w-[1126px] max-w-full flex-col border-x border-border text-center;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+  h1,
+  h2 {
+    font-family: var(--heading);
+    @apply font-medium;
   }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  h1 {
+    @apply my-8 text-[56px] tracking-[-1.68px] max-lg:my-5 max-lg:text-4xl;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  h2 {
+    @apply mb-2 text-2xl leading-[118%] tracking-[-0.24px] max-lg:text-xl;
+  }
+
+  p {
+    @apply m-0;
+  }
+
+  code {
+    font-family: var(--mono);
+    @apply inline-flex rounded px-2 py-1 text-[15px] leading-[135%] text-text-h bg-code-bg;
+  }
 }

@@ -1,0 +1,827 @@
+---
+globs: *.tsx,*.jsx
+alwaysApply: true
+---
+
+# Tailwind CSS Standards & Best Practices
+
+> This document defines the Tailwind CSS standards, architectural guidelines, and code generation rules for React + TypeScript applications. All AI-generated code, components, and UI implementations must follow these conventions.
+
+---
+
+# Core Principles
+
+- Use Tailwind CSS as the primary styling solution.
+- Prioritize readability and maintainability over minimizing class names.
+- Follow a design-system-first approach.
+- Prefer reusable components over repeated utility combinations.
+- Avoid arbitrary values unless absolutely necessary.
+- Use semantic component APIs instead of exposing styling implementation details.
+- Keep styling predictable, scalable, and consistent across the application.
+
+---
+
+# General Rules
+
+## Use Utility Classes First
+
+Preferred:
+
+```tsx
+<button className="rounded-md bg-blue-600 px-4 py-2 text-white">Save</button>
+```
+
+Avoid:
+
+```tsx
+<button
+  style={{
+    backgroundColor: "#2563eb",
+    padding: "8px 16px",
+  }}
+>
+  Save
+</button>
+```
+
+---
+
+## Avoid Inline Styles
+
+Use Tailwind utilities whenever possible.
+
+Bad:
+
+```tsx
+<div style={{ marginTop: 20 }}>
+```
+
+Good:
+
+```tsx
+<div className="mt-5">
+```
+
+---
+
+## Avoid CSS Files for Component Styling
+
+Do not create:
+
+```text
+Button.css
+Card.css
+Modal.css
+```
+
+unless there is a strong technical requirement.
+
+Prefer:
+
+```tsx
+<Button className="..." />
+```
+
+---
+
+# Class Ordering Standard
+
+Always order Tailwind classes consistently.
+
+Recommended order:
+
+```text
+1. Layout
+2. Flex/Grid
+3. Sizing
+4. Spacing
+5. Borders
+6. Backgrounds
+7. Typography
+8. Effects
+9. Transitions/Animations
+10. State Modifiers
+```
+
+Example:
+
+```tsx
+<div
+  className="
+    flex
+    items-center
+    justify-between
+    w-full
+    px-4
+    py-2
+    border
+    border-gray-200
+    bg-white
+    text-sm
+    font-medium
+    shadow-sm
+    transition-colors
+    hover:bg-gray-50
+  "
+>
+```
+
+Single-line version:
+
+```tsx
+<div className="flex items-center justify-between w-full px-4 py-2 border border-gray-200 bg-white text-sm font-medium shadow-sm transition-colors hover:bg-gray-50" />
+```
+
+---
+
+# Design Tokens
+
+## Use Tailwind Theme Values
+
+Always use theme values.
+
+Good:
+
+```tsx
+className = "p-4";
+className = "rounded-lg";
+className = "text-sm";
+```
+
+Avoid:
+
+```tsx
+className = "p-[17px]";
+className = "rounded-[11px]";
+className = "text-[13px]";
+```
+
+---
+
+## Arbitrary Values
+
+Use arbitrary values only when:
+
+- Required by a design specification.
+- No matching design token exists.
+- The value is unlikely to be reused.
+
+Acceptable:
+
+```tsx
+className = "w-[342px]";
+```
+
+Avoid:
+
+```tsx
+className = "mt-[19px]";
+className = "text-[15px]";
+```
+
+when equivalent theme values exist.
+
+---
+
+# Responsive Design
+
+## Mobile First
+
+Always start with mobile styles.
+
+Good:
+
+```tsx
+<div className="flex flex-col md:flex-row">
+```
+
+Avoid:
+
+```tsx
+<div className="md:flex-row flex-col">
+```
+
+---
+
+## Standard Breakpoints
+
+Use Tailwind defaults:
+
+```text
+sm
+md
+lg
+xl
+2xl
+```
+
+Avoid creating custom breakpoints unless required by the design system.
+
+---
+
+# Layout Standards
+
+## Prefer Flexbox
+
+Use Flexbox for:
+
+- Navigation
+- Toolbars
+- Buttons
+- Forms
+- Card headers
+
+Example:
+
+```tsx
+<div className="flex items-center justify-between">
+```
+
+---
+
+## Use Grid for True Grids
+
+Good:
+
+```tsx
+<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+```
+
+Avoid:
+
+```tsx
+<div className="flex flex-wrap">
+```
+
+for dashboard-style layouts.
+
+---
+
+# Spacing Standards
+
+## Use Consistent Spacing Scale
+
+Preferred spacing:
+
+```text
+1
+2
+3
+4
+5
+6
+8
+10
+12
+16
+20
+24
+```
+
+Examples:
+
+```tsx
+gap - 4;
+p - 6;
+mt - 8;
+```
+
+Avoid:
+
+```tsx
+gap-[18px]
+mt-[29px]
+```
+
+---
+
+## Prefer Gap Over Margins
+
+Good:
+
+```tsx
+<div className="flex gap-4">
+```
+
+Avoid:
+
+```tsx
+<div className="mr-4">
+```
+
+for sibling spacing.
+
+---
+
+# Typography Standards
+
+## Use Theme Typography
+
+Preferred:
+
+```tsx
+text - xs;
+text - sm;
+text - base;
+text - lg;
+text - xl;
+```
+
+Avoid:
+
+```tsx
+text-[13px]
+text-[15px]
+text-[19px]
+```
+
+---
+
+## Font Weight Usage
+
+Use:
+
+```text
+font-normal
+font-medium
+font-semibold
+font-bold
+```
+
+Avoid:
+
+```tsx
+font - [530];
+font - [610];
+```
+
+---
+
+## Text Colors
+
+Prefer semantic scales:
+
+```tsx
+text - gray - 900;
+text - gray - 700;
+text - gray - 500;
+```
+
+Avoid random color values:
+
+```tsx
+text-[#343434]
+```
+
+---
+
+# Component Variants
+
+## Use Variant-Based Styling
+
+Prefer:
+
+```tsx
+<Button variant="primary" />
+<Button variant="secondary" />
+<Button variant="danger" />
+```
+
+Instead of:
+
+```tsx
+<Button className="bg-red-500" />
+<Button className="bg-blue-500" />
+```
+
+---
+
+## Use Class Variance Authority (CVA)
+
+Recommended:
+
+```tsx
+import { cva } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md",
+  {
+    variants: {
+      variant: {
+        primary: "bg-primary text-white",
+        secondary: "border bg-white",
+      },
+    },
+  },
+);
+```
+
+---
+
+# Conditional Classes
+
+## Use clsx or cn Helper
+
+Preferred:
+
+```tsx
+cn("rounded-md", isActive && "bg-primary");
+```
+
+Avoid:
+
+```tsx
+`rounded-md ${isActive ? "bg-primary" : ""}`;
+```
+
+---
+
+## Standard Utility
+
+```tsx
+import { cn } from "@/lib/utils";
+```
+
+Implementation:
+
+```tsx
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+---
+
+# Dark Mode
+
+## Use Tailwind Dark Variants
+
+Good:
+
+```tsx
+<div className="bg-white dark:bg-gray-900">
+```
+
+Avoid:
+
+```tsx
+if (darkMode) {
+  ...
+}
+```
+
+for styling concerns.
+
+---
+
+## Theme Awareness
+
+Every reusable component should support dark mode.
+
+Example:
+
+```tsx
+className="
+bg-white
+text-gray-900
+dark:bg-gray-900
+dark:text-gray-100
+"
+```
+
+---
+
+# Accessibility
+
+## Always Include Focus States
+
+Good:
+
+```tsx
+className="
+focus:outline-none
+focus:ring-2
+focus:ring-blue-500
+"
+```
+
+Avoid:
+
+```tsx
+className = "outline-none";
+```
+
+without replacement focus styles.
+
+---
+
+## Minimum Touch Targets
+
+Interactive elements should be at least:
+
+```text
+44px × 44px
+```
+
+Example:
+
+```tsx
+className = "h-11 px-4";
+```
+
+---
+
+## Do Not Use Color Alone
+
+Bad:
+
+```tsx
+text - red - 500;
+```
+
+Good:
+
+```tsx
+text-red-500
+aria-invalid="true"
+```
+
+---
+
+# Animation Standards
+
+## Prefer Tailwind Animations
+
+Good:
+
+```tsx
+animate - spin;
+animate - pulse;
+```
+
+---
+
+## Keep Animations Subtle
+
+Preferred durations:
+
+```tsx
+duration - 150;
+duration - 200;
+duration - 300;
+```
+
+Avoid:
+
+```tsx
+duration-[1200ms]
+```
+
+unless explicitly required.
+
+---
+
+# Forms
+
+## Consistent Input Styling
+
+Example:
+
+```tsx
+<input
+  className="
+    w-full
+    rounded-md
+    border
+    border-gray-300
+    px-3
+    py-2
+    text-sm
+    focus:ring-2
+  "
+/>
+```
+
+---
+
+## Consistent Error States
+
+Example:
+
+```tsx
+className="
+border-red-500
+focus:ring-red-500
+"
+```
+
+---
+
+# Component Architecture
+
+## Extract Repeated Patterns
+
+If the same Tailwind classes appear three or more times:
+
+Create:
+
+```tsx
+<Card />
+<PageHeader />
+<Section />
+```
+
+instead of repeating styles.
+
+---
+
+## Avoid Massive className Strings
+
+Bad:
+
+```tsx
+<div className="very long list of repeated classes...">
+```
+
+Preferred:
+
+```tsx
+<Card />
+```
+
+or:
+
+```tsx
+const cardStyles = cva(...);
+```
+
+---
+
+# Performance
+
+## Avoid Dynamic Class Generation
+
+Bad:
+
+```tsx
+className={`bg-${color}-500`}
+```
+
+Good:
+
+```tsx
+const variants = {
+  primary: "bg-blue-500",
+  danger: "bg-red-500",
+};
+```
+
+---
+
+## Keep Purge-Friendly Classes
+
+Classes should be statically analyzable.
+
+Preferred:
+
+```tsx
+className = "bg-blue-500";
+```
+
+Avoid:
+
+```tsx
+className={`bg-${dynamicValue}`}
+```
+
+---
+
+# Tailwind Configuration
+
+## Centralize Design Tokens
+
+Use:
+
+```js
+theme: {
+  extend: {
+    colors: {},
+    spacing: {},
+    fontFamily: {},
+  }
+}
+```
+
+Avoid hardcoded values throughout the application.
+
+---
+
+## Create Semantic Colors
+
+Preferred:
+
+```tsx
+bg - primary;
+bg - secondary;
+text - muted - foreground;
+border - border;
+```
+
+Instead of:
+
+```tsx
+bg - blue - 600;
+text - gray - 500;
+```
+
+inside reusable design system components.
+
+---
+
+# React Component Example
+
+Good:
+
+```tsx
+export function Button({
+  variant = "primary",
+  className,
+  ...props
+}: ButtonProps) {
+  return (
+    <button className={cn(buttonVariants({ variant }), className)} {...props} />
+  );
+}
+```
+
+Characteristics:
+
+- Typed props
+- Variant system
+- Reusable
+- Accessible
+- Theme-aware
+- Extendable
+
+---
+
+# Anti-Patterns
+
+Avoid:
+
+- Inline styles.
+- Arbitrary values without justification.
+- Dynamic Tailwind class generation.
+- Huge repeated class strings.
+- Deeply nested utility duplication.
+- Styling directly inside pages.
+- Mixing CSS frameworks.
+- Custom CSS for common layouts.
+- Ignoring dark mode.
+- Missing focus states.
+- Hardcoded colors in reusable components.
+
+---
+
+# Cursor AI Generation Rules
+
+When generating React + TypeScript code:
+
+1. Use Tailwind CSS for all styling.
+2. Follow mobile-first responsive design.
+3. Prefer reusable components over duplicated markup.
+4. Use `cn()` for conditional classes.
+5. Use CVA for component variants.
+6. Support dark mode by default.
+7. Include accessible focus states.
+8. Use semantic design tokens whenever available.
+9. Avoid arbitrary values unless necessary.
+10. Avoid inline styles.
+11. Prefer Flexbox and Grid utilities over custom CSS.
+12. Extract repeated styling patterns into reusable components.
+13. Generate maintainable and readable class names.
+14. Keep all classes statically analyzable.
+15. Follow the standardized class ordering convention.
+
+---
+
+# Golden Rules
+
+1. Utility-first, not CSS-first.
+2. Design system before custom styling.
+3. Mobile first.
+4. Accessibility first.
+5. Reusable over duplicated.
+6. Semantic tokens over hardcoded colors.
+7. Gap over margins.
+8. CVA for variants.
+9. cn() for class merging.
+10. Tailwind theme values before arbitrary values.
+11. Dark mode support by default.
+12. Readability over class minimization.
+13. Consistency over creativity.
+14. Performance through static class generation.
+15. Every component should be scalable and maintainable.

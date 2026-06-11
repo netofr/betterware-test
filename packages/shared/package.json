@@ -16,7 +16,11 @@
     "build": "tsc",
     "clean": "rm -rf dist"
   },
+  "peerDependencies": {
+    "@reduxjs/toolkit": "^2.0.0"
+  },
   "devDependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "typescript": "^5.9.3"
   }
 }
