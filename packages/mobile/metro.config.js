@@ -20,6 +20,19 @@ const config = {
       path.resolve(monorepoRoot, 'node_modules'),
     ],
     disableHierarchicalLookup: true,
+    resolveRequest: (context, moduleName, platform) => {
+      if (moduleName.startsWith('@/')) {
+        const aliasedPath = path.resolve(
+          projectRoot,
+          'src',
+          moduleName.slice(2),
+        );
+
+        return context.resolveRequest(context, aliasedPath, platform);
+      }
+
+      return context.resolveRequest(context, moduleName, platform);
+    },
   },
 };
 

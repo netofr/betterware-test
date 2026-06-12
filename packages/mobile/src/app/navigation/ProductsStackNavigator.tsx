@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { ProductDetailScreen, ProductsScreen } from '../../screens';
+import { ProductDetailScreen, ProductsScreen } from '@/screens';
 
 import type { ProductsStackParamList } from './types';
 

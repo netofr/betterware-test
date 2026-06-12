@@ -3,8 +3,8 @@ import { useColorScheme } from 'react-native';
 import { selectCartItemsCount } from 'shared';
 import { ThemeProvider } from 'styled-components/native';
 
-import { useAppSelector } from '../hooks';
-import { darkTheme, lightTheme } from '../../shared/theme';
+import { useAppSelector } from '@/shared';
+import { darkTheme, lightTheme } from '@/shared/theme';
 
 import {
   CartBadge,

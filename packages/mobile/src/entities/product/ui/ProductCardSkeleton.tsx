@@ -1,4 +1,5 @@
-import { Skeleton } from './Skeleton';
+import { Skeleton } from '@/shared/ui';
+
 import {
   Actions,
   Card,
@@ -8,7 +9,10 @@ import {
 
 function ProductCardSkeleton() {
   return (
-    <Card accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <Card
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
       <ImageContainer>
         <Skeleton fill />
       </ImageContainer>

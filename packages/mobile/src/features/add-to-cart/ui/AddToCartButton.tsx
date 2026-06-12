@@ -1,7 +1,6 @@
 import { addToCart } from 'shared';
 
-import { useAppDispatch } from '../../../app/hooks';
-import { useToast } from '../../../shared/ui';
+import { useAppDispatch, useToast } from '@/shared';
 
 import { Button, ButtonText } from './AddToCartButton.styles';
 

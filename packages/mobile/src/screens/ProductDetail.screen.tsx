@@ -1,8 +1,12 @@
 import { selectProductById } from 'shared';
 
-import { useAppSelector } from '../app/hooks';
-import { ScreenLayout, useAppNavigation, useAppRoute } from '../app/navigation';
-import { AddToCartButton } from '../features/add-to-cart';
+import { AddToCartButton } from '@/features/add-to-cart';
+import {
+  useAppNavigation,
+  useAppRoute,
+  useAppSelector,
+} from '@/shared';
+import { Layout } from '@/widgets';
 
 import {
   Actions,
@@ -22,12 +26,12 @@ import {
 export function ProductDetailScreen() {
   const navigation = useAppNavigation();
   const route = useAppRoute<'ProductDetail'>();
-  const product = useAppSelector(state =>
+  const product = useAppSelector((state) =>
     selectProductById(state, route.params.productId),
   );
 
   return (
-    <ScreenLayout
+    <Layout
       title="Product details"
       description="Full product information"
     >
@@ -71,6 +75,6 @@ export function ProductDetailScreen() {
           </>
         )}
       </Section>
-    </ScreenLayout>
+    </Layout>
   );
 }

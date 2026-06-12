@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { fetchProducts } from 'shared';
 
-import { HomeScreen } from '../../screens';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch } from '@/shared';
+import { HomeScreen } from '@/screens';
 
 import { CartStackNavigator } from './CartStackNavigator';
 import { ProductsStackNavigator } from './ProductsStackNavigator';

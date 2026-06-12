@@ -1,3 +1,5 @@
+import type { FooterLink } from '@/shared';
+
 import {
   Container,
   Content,
@@ -6,8 +8,6 @@ import {
   NavLink,
   NavLinkText,
 } from './Footer.styles';
-
-export type FooterLink = 'shop' | 'checkout';
 
 const footerLinks = [
   { link: 'shop' as const, label: 'Shop' },

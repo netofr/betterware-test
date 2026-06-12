@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 
-import { darkTheme, lightTheme } from '../../shared/theme';
+import { darkTheme, lightTheme } from '@/shared/theme';
 
 import { Header } from './Header';
 import {

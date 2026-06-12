@@ -6,10 +6,10 @@ import {
   selectProductsStatus,
 } from 'shared';
 
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { ScreenLayout } from '../app/navigation';
-import { ProductCard } from '../entities/product';
-import { ProductCardSkeleton } from '../shared/ui';
+import { AddToCartButton } from '@/features/add-to-cart';
+import { ProductCard, ProductCardSkeleton } from '@/entities';
+import { useAppDispatch, useAppSelector, useAppNavigation } from '@/shared';
+import { Layout } from '@/widgets';
 
 import {
   ErrorContainer,
@@ -26,6 +26,7 @@ const SKELETON_COUNT = 6;
 
 export function ProductsScreen() {
   const dispatch = useAppDispatch();
+  const navigation = useAppNavigation();
   const products = useAppSelector(selectAllProducts);
   const productsCount = useAppSelector(selectProductsCount);
   const productsStatus = useAppSelector(selectProductsStatus);
@@ -36,7 +37,7 @@ export function ProductsScreen() {
   };
 
   return (
-    <ScreenLayout title="Products" description="Products list">
+    <Layout title="Products" description="Products list">
       <Section>
         <ProductsTitle>Products ({productsCount})</ProductsTitle>
         {productsStatus === 'failed' && productsError ? (
@@ -58,7 +59,7 @@ export function ProductsScreen() {
           ? Array.from({ length: SKELETON_COUNT }, (_, index) => (
               <ProductCardSkeleton key={`product-skeleton-${index}`} />
             ))
-          : products.map(product => (
+          : products.map((product) => (
               <ProductCard
                 key={product.id}
                 id={product.id}
@@ -66,9 +67,20 @@ export function ProductsScreen() {
                 price={product.price}
                 category={product.category}
                 imageUrl={product.imageUrl}
+                actions={
+                  <AddToCartButton
+                    productId={product.id}
+                    productName={product.name}
+                  />
+                }
+                onViewDetailsPress={() =>
+                  navigation.navigate('ProductDetail', {
+                    productId: product.id,
+                  })
+                }
               />
             ))}
       </Section>
-    </ScreenLayout>
+    </Layout>
   );
 }

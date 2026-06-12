@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { CartScreen, CheckoutScreen } from '../../screens';
+import { CartScreen, CheckoutScreen } from '@/screens';
 
 import type { CartStackParamList } from './types';
 

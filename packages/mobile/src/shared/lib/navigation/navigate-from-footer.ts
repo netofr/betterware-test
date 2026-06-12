@@ -1,8 +1,7 @@
 import { CommonActions } from '@react-navigation/native';
 
-import type { FooterLink } from '../../widgets';
-
 import type { AppNavigationProp } from './hooks';
+import type { FooterLink } from './types';
 
 export function navigateFromFooter(
   link: FooterLink,

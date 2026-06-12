@@ -1,5 +1,4 @@
-import { useAppNavigation } from '../../../app/navigation';
-import { AddToCartButton } from '../../../features/add-to-cart';
+import type { ReactNode } from 'react';
 
 import {
   Actions,
@@ -21,21 +20,18 @@ export type ProductCardProps = {
   price: number;
   category: string;
   imageUrl?: string;
+  actions?: ReactNode;
+  onViewDetailsPress?: () => void;
 };
 
 export function ProductCard({
-  id,
   name,
   price,
   category,
   imageUrl,
+  actions,
+  onViewDetailsPress,
 }: ProductCardProps) {
-  const navigation = useAppNavigation();
-
-  const handleViewDetails = () => {
-    navigation.navigate('ProductDetail', { productId: id });
-  };
-
   return (
     <Card>
       <ImageContainer>
@@ -52,10 +48,12 @@ export function ProductCard({
         <Price>${price.toFixed(2)}</Price>
 
         <Actions>
-          <AddToCartButton productId={id} productName={name} />
-          <ViewDetailsButton onPress={handleViewDetails}>
-            <ViewDetailsButtonText>View details</ViewDetailsButtonText>
-          </ViewDetailsButton>
+          {actions}
+          {onViewDetailsPress ? (
+            <ViewDetailsButton onPress={onViewDetailsPress}>
+              <ViewDetailsButtonText>View details</ViewDetailsButtonText>
+            </ViewDetailsButton>
+          ) : null}
         </Actions>
       </Content>
     </Card>
