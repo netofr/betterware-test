@@ -52,6 +52,9 @@ const cartSlice = createSlice({
     clearCart(state) {
       cartAdapter.removeAll(state);
     },
+    hydrateCart(_state, action: PayloadAction<CartState>) {
+      return action.payload;
+    },
   },
 });
 
@@ -61,6 +64,7 @@ export const {
   decrementCartItem,
   removeFromCart,
   clearCart,
+  hydrateCart,
 } = cartSlice.actions;
 
 export const cartReducer = cartSlice.reducer;

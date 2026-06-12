@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
-import { configureApi } from 'shared';
+import { configureApi, hydrateCartFromStorage } from 'shared';
 
+import { cartStorage } from './src/app/cart-storage';
 import { RootNavigator } from './src/app/navigation';
 import { store } from './src/app/store';
 import { PRODUCTS_API_URL } from './src/config/env';
@@ -11,6 +13,18 @@ configureApi({
 });
 
 function App() {
+  const [isCartHydrated, setIsCartHydrated] = useState(false);
+
+  useEffect(() => {
+    hydrateCartFromStorage(store, cartStorage).finally(() => {
+      setIsCartHydrated(true);
+    });
+  }, []);
+
+  if (!isCartHydrated) {
+    return null;
+  }
+
   return (
     <Provider store={store}>
       <ToastProvider>

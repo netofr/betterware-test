@@ -7,8 +7,13 @@ export {
   addToCart,
   cartReducer,
   clearCart,
+  createCartPersistenceMiddleware,
   decrementCartItem,
+  hydrateCart,
+  hydrateCartFromStorage,
   incrementCartItem,
+  loadCartState,
+  loadCartStateSync,
   removeFromCart,
   selectAllCartItems,
   selectCartItemByProductId,
@@ -19,7 +24,12 @@ export {
   selectCartTotalAmount,
   selectCartUniqueItemsCount,
 } from "./entities/cart";
-export type { CartItem, CartLineItem, CartState } from "./entities/cart";
+export type {
+  CartItem,
+  CartLineItem,
+  CartState,
+  CartStorage,
+} from "./entities/cart";
 
 export {
   addProduct,
