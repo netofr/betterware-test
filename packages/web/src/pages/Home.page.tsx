@@ -1,4 +1,4 @@
-import { Layout } from "../widgets/ui/Layout";
+import { Layout } from '@/widgets';
 
 function HomePage() {
   return (

@@ -1,12 +1,12 @@
-import { selectCartItemsCount } from "shared";
-import { Link, NavLink } from "react-router-dom";
+import { selectCartItemsCount } from 'shared';
+import { Link, NavLink } from 'react-router-dom';
 
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from '@/shared';
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/products", label: "Products" },
-  { to: "/cart", label: "Cart" },
+  { to: '/', label: 'Home' },
+  { to: '/products', label: 'Products' },
+  { to: '/cart', label: 'Cart' },
 ] as const;
 
 export function Header() {
@@ -32,11 +32,11 @@ export function Header() {
               to={to}
               className={({ isActive }) =>
                 `rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent-bg hover:text-text-h ${
-                  isActive ? "bg-accent-bg text-text-h" : "text-text"
+                  isActive ? 'bg-accent-bg text-text-h' : 'text-text'
                 }`
               }
             >
-              {to === "/cart" && cartItemsCount > 0 ? (
+              {to === '/cart' && cartItemsCount > 0 ? (
                 <span className="inline-flex items-center gap-1.5">
                   {label}
                   <span className="inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-white">

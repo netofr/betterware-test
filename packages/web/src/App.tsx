@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { fetchProducts } from "shared";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { useAppDispatch } from "./app/hooks";
+import { useAppDispatch } from '@/shared';
 import {
   CartPage,
   CheckoutPage,

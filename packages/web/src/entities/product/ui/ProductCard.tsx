@@ -1,8 +1,5 @@
-import { addToCart } from "shared";
-import { useNavigate } from "react-router-dom";
-
-import { useAppDispatch } from "../../../app/hooks";
-import { useToast } from "../../../app/useToast";
+import type { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 export type ProductCardProps = {
   id: string;
@@ -10,6 +7,7 @@ export type ProductCardProps = {
   price: number;
   category: string;
   imageUrl?: string;
+  actions?: ReactNode;
 };
 
 export function ProductCard({
@@ -18,16 +16,8 @@ export function ProductCard({
   price,
   category,
   imageUrl,
+  actions,
 }: ProductCardProps) {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { showToast } = useToast();
-
-  const handleAddToCart = () => {
-    dispatch(addToCart(id));
-    showToast(`${name} added to cart`);
-  };
-
   return (
     <article className="flex flex-col overflow-hidden rounded-lg border border-border bg-bg text-left shadow-[var(--shadow)]">
       <div className="flex aspect-square items-center justify-center bg-code-bg p-4">
@@ -48,20 +38,13 @@ export function ProductCard({
         <p className="text-lg font-semibold text-text-h">${price.toFixed(2)}</p>
 
         <div className="mt-auto flex flex-col gap-2">
-          <button
-            type="button"
-            className="cursor-pointer rounded-md border border-accent-border bg-accent-bg px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-accent hover:text-white"
-            onClick={handleAddToCart}
-          >
-            Add to cart
-          </button>
-          <button
-            type="button"
-            className="cursor-pointer rounded-md border border-border px-4 py-2 text-sm font-medium text-text-h transition-colors hover:bg-code-bg"
-            onClick={() => navigate(`/products/${id}`)}
+          {actions}
+          <Link
+            to={`/products/${id}`}
+            className="inline-flex rounded-md border border-border px-4 py-2 text-center text-sm font-medium text-text-h transition-colors hover:bg-code-bg"
           >
             View details
-          </button>
+          </Link>
         </div>
       </div>
     </article>

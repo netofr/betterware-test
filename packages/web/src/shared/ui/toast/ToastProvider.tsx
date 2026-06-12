@@ -1,6 +1,6 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from 'react';
 
-import { ToastContext } from "./toast-context";
+import { ToastContext } from './toast-context';
 
 type ToastItem = {
   id: number;
