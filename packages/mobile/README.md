@@ -1,97 +1,133 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Betterware Mobile
 
-# Getting Started
+The native iOS and Android app for the Betterware mini e-commerce experience. Built with React Native, React Navigation, styled-components, and Redux Toolkit, sharing domain logic with web through the `shared` workspace package.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Tech Stack
 
-## Step 1: Start Metro
+| Category     | Libraries                                           |
+| ------------ | --------------------------------------------------- |
+| Framework    | React Native 0.86, React 19                         |
+| Language     | TypeScript 5.8                                      |
+| Styling      | styled-components                                   |
+| Navigation   | React Navigation 7 (bottom tabs + native stack)     |
+| State        | Redux Toolkit, react-redux                          |
+| Persistence  | `@react-native-async-storage/async-storage`         |
+| Shared logic | `shared` workspace (`products`, `cart`, API client) |
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
+- Node.js ≥ 22.11.0
+- iOS = 26.5
+- Dependencies installed from the **monorepo root** (`npm install`)
+- [React Native environment setup](https://reactnative.dev/docs/set-up-your-environment) for your target platform
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
 ```sh
-bundle install
+cd ios
+bundle install          # first time only
+bundle exec pod install # after native dependency changes
 ```
 
-Then, and every time you update your native dependencies, run:
+### Android
+
+Android Studio with SDK, emulator or physical device configured.
+
+## Environment Variables
+
+Create a `.env` file from the example:
 
 ```sh
-bundle exec pod install
+cp .env.example .env
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+| Variable           | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| `PRODUCTS_API_URL` | Products API endpoint (default: `https://fakestoreapi.com/products`) |
+
+The `prestart` script runs `scripts/sync-env.js`, which reads `.env` and generates `src/config/env.ts`. Do not edit `env.ts` manually — it is overwritten on every `npm start`.
+
+## Scripts
+
+Run from the monorepo root unless noted.
+
+| Command                           | Description                           |
+| --------------------------------- | ------------------------------------- |
+| `npm run start:mobile`            | Start Metro bundler (syncs env first) |
+| `npm run ios`                     | Build and run on iOS simulator        |
+| `npm run android`                 | Build and run on Android emulator     |
+| `npm run test --workspace=mobile` | Run Jest tests                        |
+| `npm run lint --workspace=mobile` | Run ESLint                            |
+
+## Project Structure (FSD)
+
+```
+src/
+├── app/           # Store, navigation, hooks, cart storage
+├── screens/       # Screen-level components (Home, Products, Cart, etc.)
+├── widgets/       # Composite UI blocks (Header, Layout, Footer)
+├── features/      # User actions (e.g. add-to-cart)
+├── entities/      # Platform-specific entity UI (e.g. ProductCard)
+└── shared/        # Theme, UI primitives, toast system
+```
+
+Layer dependency rule: `app` → `screens` → `widgets` → `features` → `entities` → `shared`.
+
+> Platform-agnostic Redux slices and API logic live in `packages/shared`, not in this `shared/` folder.
+
+## Navigation
+
+`src/app/navigation/RootNavigator.tsx` defines the app shell:
+
+- **Home** tab — landing screen
+- **Products** tab — product list and detail stack
+- **Cart** tab — cart and checkout stack
+
+## Redux Store
+
+Configured in `src/app/store.ts`:
+
+- **`products`** — product catalog from `shared`
+- **`cart`** — normalized cart state from `shared`, persisted via AsyncStorage
+
+Cart hydration is async. `App.tsx` waits for `hydrateCartFromStorage()` before rendering the navigator.
+
+Use typed hooks from `src/app/hooks.ts`:
+
+```ts
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+```
+
+## Cart Persistence
+
+Storage is implemented in `src/app/cart-storage.ts` using AsyncStorage. The `CartStorage` interface from `shared` allows the persistence middleware to work identically across platforms.
+
+If cart persistence fails silently, rebuild the native app after linking AsyncStorage pods:
 
 ```sh
-# Using npm
+cd ios && bundle exec pod install && cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Theming
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Design tokens live in `src/shared/theme/` (`colors`, `spacing`, `typography`, etc.). Styled components should reference theme values — see `.cursor/rules/styled-components.mdc` for team standards.
 
-## Step 3: Modify your app
+## Development Notes
 
-Now that you have successfully run the app, let's make changes!
+- After changing `packages/shared`, rebuild: `npm run build:shared` from the repo root.
+- Metro must be running before `ios` or `android` commands.
+- **Reload**: press `R` twice (Android) or `R` (iOS Simulator). Dev menu: `Cmd+M` (iOS) / `Ctrl+M` (Android).
+- Import from barrel files only — avoid deep imports into slice internals.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Troubleshooting
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+- [React Native troubleshooting guide](https://reactnative.dev/docs/troubleshooting)
+- Pod issues: delete `ios/Pods` and `Podfile.lock`, then run `bundle exec pod install` again.
+- Metro cache: `npx react-native start --reset-cache`
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Related
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- [Monorepo README](../../README.md)
+- [Shared package README](../shared/README.md)
+- [FSD architecture guide](../../docs/feature-sliced-design.md)

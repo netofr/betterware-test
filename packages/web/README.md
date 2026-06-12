@@ -1,73 +1,99 @@
-# React + TypeScript + Vite
+# Betterware Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The browser storefront for the Betterware mini e-commerce experience. Built with React, Vite, Tailwind CSS, and Redux Toolkit, consuming shared business logic from the `shared` workspace package.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Category | Libraries |
+| --- | --- |
+| Framework | React 19, Vite 8 |
+| Language | TypeScript 6 |
+| Styling | Tailwind CSS 4 |
+| Routing | React Router 7 |
+| State | Redux Toolkit, react-redux |
+| Shared logic | `shared` workspace (`products`, `cart`, API client) |
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js ≥ 22.11.0
+- Dependencies installed from the **monorepo root** (`npm install`)
 
-## Expanding the ESLint configuration
+## Environment Variables
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Create a `.env` file from the example:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+cp .env.example .env
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Variable | Description |
+| --- | --- |
+| `VITE_PRODUCTS_API_URL` | Products API endpoint (default: `https://fakestoreapi.com/products`) |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The API is configured at startup in `src/main.tsx` via `configureApi()` from `shared`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts
+
+Run from the monorepo root unless noted.
+
+| Command | Description |
+| --- | --- |
+| `npm run web` | Start Vite dev server with HMR |
+| `npm run dev --workspace=web` | Same as above |
+| `npm run build --workspace=web` | Type-check and production build |
+| `npm run preview --workspace=web` | Preview the production build |
+| `npm run lint --workspace=web` | Run ESLint |
+
+## Project Structure (FSD)
+
 ```
+src/
+├── app/           # Store, hooks, providers, cart storage
+├── pages/         # Route-level page components
+├── widgets/       # Composite UI blocks (Header, Layout, Footer)
+├── entities/      # Platform-specific entity UI (e.g. ProductCard)
+└── shared/        # Local UI primitives (Skeleton, ProductCardSkeleton)
+```
+
+Layer dependency rule: `app` → `pages` → `widgets` → `features` → `entities` → `shared`.
+
+> Platform-agnostic Redux slices and API logic live in `packages/shared`, not in this `shared/` folder.
+
+## Routes
+
+| Path | Page |
+| --- | --- |
+| `/` | Home |
+| `/products` | Product list |
+| `/products/:id` | Product detail |
+| `/cart` | Shopping cart |
+| `/checkout` | Checkout |
+
+## Redux Store
+
+Configured in `src/app/store.ts`:
+
+- **`products`** — product catalog from `shared` (`fetchProducts` thunk)
+- **`cart`** — normalized cart state from `shared`, persisted to `localStorage`
+
+Use typed hooks from `src/app/hooks.ts`:
+
+```ts
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+```
+
+## Cart Persistence
+
+Cart state is hydrated synchronously on load and saved after every cart action via `createCartPersistenceMiddleware` from `shared`. Storage is implemented in `src/app/cart-storage.ts` using `localStorage`.
+
+## Development Notes
+
+- After changing `packages/shared`, rebuild: `npm run build:shared` from the repo root.
+- Styling follows Tailwind utility-first conventions; see `.cursor/rules/tailwindcss.mdc` for team standards.
+- Import from barrel files only — avoid deep imports into slice internals.
+
+## Related
+
+- [Monorepo README](../../README.md)
+- [Shared package README](../shared/README.md)
+- [FSD architecture guide](../../docs/feature-sliced-design.md)
